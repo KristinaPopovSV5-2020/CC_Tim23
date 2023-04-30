@@ -1,0 +1,98 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="center">
+        <h1>Sign up</h1>
+        <hr color="gray">
+        <form class="form" [formGroup]="signupForm">
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input style=" text-indent: 10px;"  formControlName="name" type="text"  matInput>
+                <mat-error *ngIf="signupForm.get('name')?.hasError('required')">
+                    Name is Required!
+                </mat-error>
+                <mat-error *ngIf="signupForm.get('name')?.hasError('pattern')">
+                    Must contain only letters!
+                  </mat-error>
+                  <mat-error *ngIf="signupForm.get('name')?.hasError('maxlength')">
+                    Max 20 characters!
+                  </mat-error>
+                  <mat-error *ngIf="signupForm.get('name')?.hasError('minlength')">
+                    Min 3 characters!
+                  </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Surname</mat-label>
+                <input style=" text-indent: 10px;" formControlName="surname"  type="text"  matInput>
+                <mat-error *ngIf="signupForm.get('surname')?.hasError('required')">
+                    Surname is Required!
+                </mat-error>
+                <mat-error *ngIf="signupForm.get('surname')?.hasError('pattern')">
+                    Must contain only letters!
+                  </mat-error>
+                  <mat-error *ngIf="signupForm.get('surname')?.hasError('maxlength')">
+                    Max 20 characters!
+                  </mat-error>
+                  <mat-error *ngIf="signupForm.get('surname')?.hasError('minlength')">
+                    Min 3 characters!
+                  </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input style=" text-indent: 10px;" formControlName="email" type="email" matInput>
+                <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
+                    Email is Required!
+                </mat-error>
+                <mat-error *ngIf="signupForm.get('email')?.hasError('pattern')">
+                    Invalid email!
+                  </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Birth</mat-label>
+                <input matInput [matDatepicker]="picker" style=" text-indent: 10px;"  formControlName="birth" [max]="maxDate" >
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="signupForm.get('birth')?.hasError('required')">
+                    Birth is Required!
+                </mat-error>
+              </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" >
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+                    Password is Required!
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Confirm password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmpsw" >
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('required')">
+                    Confirm is Required!
+                </mat-error>
+                <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('passDontMatch')">
+                    Passwords do not match!
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input style=" text-indent: 10px;"  formControlName="username" matInput>
+                <mat-error *ngIf="signupForm.get('username')?.hasError('required')">
+                    Username is Required!
+                </mat-error>
+            </mat-form-field>
+            
+        </form>
+        <button class="button" mat-button (click)="signup()">Confirm</button>
+    </div>
+</body>
+
+

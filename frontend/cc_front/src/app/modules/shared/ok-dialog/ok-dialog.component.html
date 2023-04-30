@@ -1,0 +1,25 @@
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div id="myModal">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="icon-box">
+					<i class="material-icons">&#xE559;</i>
+				</div>				
+				<h4 class="modal-title w-100">Great!</h4>	
+			</div>
+			<div class="modal-body">
+				<p class="text-center">{{data.dialogMessage}}</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-block" (click)="close()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>     
+</body>

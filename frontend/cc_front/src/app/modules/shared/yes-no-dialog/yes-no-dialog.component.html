@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Accept the ride</h1>
+<div mat-dialog-content>
+  <div *ngIf="hasReason">
+    <br>
+    <br>
+    <input id="input" matInput [(ngModel)]="local_data.reason">
+</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="accept()">Accept</button>
+  <button mat-button (click)="deny()" mat-flat-button color="warn">Deny</button>
+</div>

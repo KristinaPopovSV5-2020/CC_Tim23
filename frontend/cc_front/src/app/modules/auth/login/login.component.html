@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <p class="title">Login into your account</p>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <mat-error id="message" *ngIf="hasError">Wrong username or password.</mat-error>
+      <p>
+      <mat-form-field appearance="outline" style="height: 50px;margin-bottom: 30px; margin-top: 20px;">
+        <mat-label>Email</mat-label>
+        <input formControlName="email" name="email" type="email" id="emailLogin" matInput>
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" style="height: 50px;">
+        <mat-label>Password</mat-label>
+        <input formControlName="password" id="passwordLogin" name="password" matInput [type]="hide ? 'password' : 'text'">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    </p>
+      <button mat-raised-button type="submit" color="mycolor" style="
+        background-color: #665582;
+        color: #f4f1de;"
+        id="loginBtn">Login</button>
+    </form>
+</body>
+</html>
+
