@@ -138,3 +138,5 @@ export class GalleryPhotoComponent implements OnInit {
 export interface Folder {
   name: string
 }
+
+
