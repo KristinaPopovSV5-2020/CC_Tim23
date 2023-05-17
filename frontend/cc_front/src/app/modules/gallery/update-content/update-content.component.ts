@@ -107,17 +107,3 @@ export class UpdateContentComponent implements OnInit {
 
 }
 
-
-//OVO SIG TREBA PROMENITI
-export interface Content{
-  album: string,
-  dateCreated: string,
-  dateModified: string,
-  desc: string,
-  fileName: string,
-  filesize: number,
-  fileType: string,
-  tags: string[],
-  user: string,
-  userEmail: string
-}

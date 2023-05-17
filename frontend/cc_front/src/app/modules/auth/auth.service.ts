@@ -19,24 +19,21 @@ export class AuthService {
     userState$ = this.user$.asObservable();
   
     constructor(private http: HttpClient) {
-      this.user$.next(this.getRole());
     }
   
-    login(auth: any): Observable<Token> {
-      return this.http.post<Token>(environment.apiHost + 'api/user/login', auth, {
+    login(auth: any): Observable<any> {
+      return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/login_user", auth, {
         headers: this.headers,
       });
     }
 
-    getRole(): any {
-      if (this.isLoggedIn()) {
-        const accessToken: any = localStorage.getItem('user');
-        const helper = new JwtHelperService();
-        const role = helper.decodeToken(accessToken).role[0].name;
-        return role;
-      }
-      return null;
+    signUp(user: any): Observable<any> {
+      return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/register_user", user, {
+        headers: this.headers,
+      });
     }
+
+  
   
     getUsername(): any{
       const accessToken: any = localStorage.getItem('user');
@@ -50,19 +47,6 @@ export class AuthService {
       return true;
     }
     return false;
-  }
-
-  setUser(): void {
-    this.user$.next(this.getRole());
-  }
-
-  getUrlPath(): string {
-    if (this.getRole() =="ROLE_USER") {
-        return "user";
-    }else if (this.getRole() == "ROLE_ADMIN") {
-      return "admin";
-    }
-    return "";
   }
 
   

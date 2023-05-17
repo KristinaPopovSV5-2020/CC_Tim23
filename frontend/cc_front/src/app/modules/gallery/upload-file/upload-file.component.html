@@ -5,6 +5,24 @@
 <div id="wrapper">
     <div id="dialog">
       <form class="form" [formGroup]="UploadForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Filename</mat-label>
+          <input matInput   formControlName="filename">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <input  matInput  formControlName="description" >
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Add tag</mat-label>
+            <input matInput (keyup.enter)="addTag()" #tagInput formControlName="tags" >
+          </mat-form-field>
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
+              {{ tag }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+          </mat-chip-list>
         <mat-form-field>
             <mat-label>File</mat-label>
             <button class="butt-file" mat-icon-button matPrefix (click)="f_input.click()">
