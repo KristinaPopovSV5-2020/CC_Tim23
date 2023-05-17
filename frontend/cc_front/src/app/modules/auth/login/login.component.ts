@@ -14,7 +14,7 @@ export class LoginComponent {
 
   hide = true;
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
   hasError: boolean = false;
@@ -24,16 +24,16 @@ export class LoginComponent {
 
   login(): void {
     const loginVal = {
-      email: this.loginForm.value.email,
+      username: this.loginForm.value.username,
       password: this.loginForm.value.password,
     };
 
     if (this.loginForm.valid) {
+      
       this.authService.login(loginVal).subscribe({
         next: (result) => {
           localStorage.setItem('user', JSON.stringify(result));
-          this.authService.setUser();
-          this.router.navigate(['/' + this.authService.getUrlPath()]);
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {

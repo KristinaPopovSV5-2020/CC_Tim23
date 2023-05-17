@@ -5,6 +5,7 @@ import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.com
 import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 import { AuthService } from '../auth.service';
 import { validateRePassword } from './custom-validator/validator';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -84,7 +85,25 @@ export class SignupComponent implements OnInit{
 
   signup() : void{
     if(this.signupForm.valid){
-      
+      const dateToFormat = new Date(this.signupForm.value.birth);
+      const formattedDate = `${dateToFormat.getFullYear()}/${(dateToFormat.getMonth() + 1).toString().padStart(2, '0')}/${dateToFormat.getDate().toString().padStart(2, '0')}`;
+      this.authService.signUp({
+        name: this.signupForm.value.name,
+        surname: this.signupForm.value.surname,
+        email: this.signupForm.value.email,
+        birth:formattedDate,
+        password: this.signupForm.value.password,
+        username:this.signupForm.value.username
+      }).subscribe({
+        next: (result) => {
+          console.log(result);
+        },
+        error: (error) => {
+          if (error instanceof HttpErrorResponse) {
+            console.log(error);
+          }
+        },
+      });
 
     }else{
     }
