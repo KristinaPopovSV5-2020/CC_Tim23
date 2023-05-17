@@ -38,10 +38,10 @@ export class AuthService {
       return null;
     }
   
-    getId(): any{
+    getUsername(): any{
       const accessToken: any = localStorage.getItem('user');
       const helper = new JwtHelperService();
-      const id = helper.decodeToken(accessToken).id;
+      const id = helper.decodeToken(accessToken).preferred_username;
       return id;
     }
 
