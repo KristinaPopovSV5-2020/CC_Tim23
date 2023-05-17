@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GalleryService, UploadFile } from '../gallery.service';
+import { GalleryService } from '../gallery.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -13,8 +13,10 @@ export class UploadFileComponent  implements OnInit{
   file_upload: File | null | undefined;
 
   UploadForm !: FormGroup;
-  newTag: any;
-  tags: any;
+  tags: string[] = ['Tag 1', 'Tag 2', 'Tag 3'];
+  newTag: string = '';
+
+ 
 
   constructor(private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UploadFileComponent>,
@@ -48,6 +50,13 @@ export class UploadFileComponent  implements OnInit{
     }
   }
 
+  @HostListener('document:keydown.enter', ['$event'])
+  handleEnterKey(event: KeyboardEvent): void {
+    if (event.target !== document.querySelector('input')) {
+      event.preventDefault();
+    }
+  }
+
   handleFileInputChangePicture(l: FileList): void {
     this.file_upload = l.item(0);
     if (l.length) {
@@ -69,6 +78,10 @@ export class UploadFileComponent  implements OnInit{
       const file = this.UploadForm.value.file;
       this.dialogRef.close(this.dialogData.value);
     }
+  }
+
+  close(){
+    this.dialogRef.close();
   }
 
 }
