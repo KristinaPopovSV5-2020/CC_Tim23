@@ -21,18 +21,14 @@ export class UploadFileComponent  implements OnInit{
     private galleryService: GalleryService,
     @Inject(MAT_DIALOG_DATA) public dialogData: { value: string }){
     }
-    
-
-
 
   ngOnInit(): void {
+    console.log(this.dialogData.value)
     this.UploadForm = this.formBuilder.group({
-      file:['',
-          [
-            Validators.required,
-          ],
-      ],
-      
+      filename: ['', Validators.required],
+      description: [''],
+      tags: [''],
+      file: ['', Validators.required]
     });
     
   }
@@ -52,29 +48,6 @@ export class UploadFileComponent  implements OnInit{
     }
   }
 
-  processFileUpload(file: File, filename: string, album: string, description: string, tags: string): UploadFile {
-    const currentDate = new Date().toLocaleDateString(); // Get the current date as a string
-    const fileType = file.type; // Retrieve the file type from the uploaded file
-    const fileSize = `${(file.size / 1024).toFixed(2)}KB`; // Calculate the file size in KB
-    
-    const content: UploadFile = {
-      content: '',
-      fileName: filename,
-      album: album,
-      fileType: fileType,
-      fileSize: fileSize,
-      dateCreated: currentDate,
-      dateModified: currentDate,
-      desc: description,
-      tags: tags,
-    };
-  
-    return content;
-  }
-
-
-
-
   handleFileInputChangePicture(l: FileList): void {
     this.file_upload = l.item(0);
     if (l.length) {
@@ -89,11 +62,13 @@ export class UploadFileComponent  implements OnInit{
 
 
   confirm(){
-    if (this.UploadForm.valid){        
+    if (this.UploadForm.valid){
+      const filename = this.UploadForm.value.filename;
+      const description = this.UploadForm.value.description;
+      const tags = this.tags;
+      const file = this.UploadForm.value.file;
       this.dialogRef.close(this.dialogData.value);
-
     }
-
   }
 
 }
