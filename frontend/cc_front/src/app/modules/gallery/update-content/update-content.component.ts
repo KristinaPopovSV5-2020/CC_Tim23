@@ -76,6 +76,10 @@ export class UpdateContentComponent implements OnInit {
 
     }
 
+    close(){
+      this.dialogRef.close();
+    }
+
 
     deleteContent(){
 
