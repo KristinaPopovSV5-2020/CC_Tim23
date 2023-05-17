@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { GalleryService } from '../gallery.service';
 import { Observable, filter, of } from 'rxjs';
 import { ShareContentComponent } from '../share-content/share-content.component';
+import { YesNoDialogComponent } from '../../shared/yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-update-content',
@@ -82,6 +83,14 @@ export class UpdateContentComponent implements OnInit {
 
 
     deleteContent(){
+      const d = this.dialog.open(YesNoDialogComponent);
+
+      d.afterClosed().subscribe(result => {
+        if (result) {
+          //api da obrise 
+        }
+      });
+
 
     }
 

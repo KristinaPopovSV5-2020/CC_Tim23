@@ -9,28 +9,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class YesNoDialogComponent {
 
   local_data:any;
-  hasReason=false;
 
   constructor(
     public dialogRef: MatDialogRef<YesNoDialogComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: UsersData) {
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: boolean) {
     this.local_data = {data};
   }
 
   accept(){
-    this.dialogRef.close({accept:true,reason:""});
+    this.dialogRef.close({accept:true});
   }
 
   deny(){
-    if(!this.hasReason)
-      this.hasReason=true;
-    else
-      this.dialogRef.close({accept:false, reason:this.local_data.reason});
+    this.dialogRef.close({accept:false});
   }
 
 }
 
-export interface UsersData {
-  reason: string;
-  accept: boolean;
-}
