@@ -22,6 +22,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatNativeDateModule} from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     ReactiveFormsModule,   
     FormsModule, 
     MatButtonToggleModule,
-    MatNativeDateModule 
+    MatNativeDateModule ,
+    MatChipsModule
   ],
   exports:[
     CommonModule,
@@ -77,7 +79,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     ReactiveFormsModule,
     FormsModule,
     MatButtonToggleModule,
-    MatNativeDateModule 
+    MatNativeDateModule ,
+    MatChipsModule
     
   ]
 

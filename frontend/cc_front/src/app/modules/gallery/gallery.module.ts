@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GalleryPhotoComponent } from './gallery-photo/gallery-photo.component';
 import { MaterialModule } from 'src/infrastructure/material.module';
@@ -20,6 +20,7 @@ import { UpdateContentComponent } from './update-content/update-content.componen
     CommonModule,
     MaterialModule,
     SharedModule,
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 })
 export class GalleryModule { }

@@ -7,12 +7,9 @@
 }
     
 #dialog {
-    border: solid 1px #ccc;
     margin: 10px auto;
     padding: 20px 30px;
     display: inline-block;
-    box-shadow: 0 0 4px #ccc;
-    background-color: #FAF8F8;
     overflow: hidden;
     position: relative;
     max-width: 450px;

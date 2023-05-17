@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GalleryService } from '../gallery.service';
@@ -9,12 +9,17 @@ import { Observable, filter, of } from 'rxjs';
   templateUrl: './update-content.component.html',
   styleUrls: ['./update-content.component.css']
 })
-export class UpdateContentComponent {
+export class UpdateContentComponent implements OnInit {
 
   UpdateContentForm !: FormGroup;
   public filename = "";
   public description = "";
-  tags = ['Pizza', 'Pasta', 'Parmesan'];
+  public album = "Masa";
+  public dateCreated = "23/09/1002";
+  public dateModified = "12/09/2009";
+  public type = "jpg";
+  public size = "100 MB";
+  
 
   constructor(private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UpdateContentComponent>,
@@ -22,7 +27,29 @@ export class UpdateContentComponent {
    /* @Inject(MAT_DIALOG_DATA) public dialogData: { value: Content }){
       this.filename = dialogData.value.fileName;
       this.description = dialogData.value.desc;
+      this.album = dialogData.value.album;
+      this.dateCreated = dialogData.value.dateCreated;
+      this.dateModified = dialogData.value.dateModified;
+      this.type =dialogData.value.type;
+      this.size = dialogData.value.size;
     }*/
+    tags: string[] = ['Tag 1', 'Tag 2', 'Tag 3'];
+  newTag: string = '';
+
+  addTag(): void {
+    const tag = this.newTag.trim();
+    if (tag && !this.tags.includes(tag)) {
+      this.tags.push(tag);
+    }
+    this.newTag = '';
+  }
+
+  removeTag(tag: string): void {
+    const index = this.tags.indexOf(tag);
+    if (index !== -1) {
+      this.tags.splice(index, 1);
+    }
+  }
     
 
 
@@ -33,7 +60,8 @@ export class UpdateContentComponent {
               Validators.required,
             ],
         ],
-        
+        description:['',[]],
+        tags:['',[]],   
       });
       
     }
@@ -46,17 +74,20 @@ export class UpdateContentComponent {
 
     }
 
-    onAdding(tag: any): Observable<any> {
-      const confirm = window.confirm('Do you really want to add this tag?');
-      return of(tag).pipe(filter(() => confirm));
+
+    deleteContent(){
+
     }
+
+
+    shareContent(){
+
+    }
+
+    
+
   
-    onRemoving(tag: any): Observable<any> {
-      const confirm = window.confirm(
-        'Do you really want to remove this tag?' + tag.name
-      );
-      return of(tag).pipe(filter(() => confirm));
-    }
+
 
 }
 

@@ -2,31 +2,56 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
-<div id="wrapper">
-    <div id="dialog">
-      <form class="form" [formGroup]="UpdateContentForm">
-        <mat-form-field appearance="fill">
-          <mat-label>Filename</mat-label>
-          <input matInput  formControlName="filename" [(ngModel)]="filename" >
-          <mat-error *ngIf="UpdateContentForm.get('filename')?.hasError('required')">
-              Filename is Required!
-          </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
-        <input  matInput  formControlName="description" [(ngModel)]="description" >
-    </mat-form-field>
-    </form>
-    <div class="form-group">
-        <label>Angular tags simple input </label>
-        <tag-input [(ngModel)]='tags'></tag-input>
-    </div>
+<body>
+    <div id="wrapper">
+        <div id="dialog">
+            <h2>Update file</h2>
+            <div class="card flex-row flex-wrap">
+                <div style="display:inline-flex;margin: 2px; float: left;">
+                    <h4 style="margin-left: 5px; margin-top:0px; margin-bottom: 0px;"><b>Album:</b> {{album}}</h4>
+                    <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Created:</b> {{dateCreated}}</h4>
+                    <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Modified:</b> {{dateModified}}</h4>
+                    <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Size:</b> {{size}}</h4>
+                    <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Type:</b> {{type}}</h4>
+                </div>
+                
+            
+        </div>
+          <form class="form" [formGroup]="UpdateContentForm">
+            <mat-form-field appearance="fill">
+              <mat-label>Filename</mat-label>
+              <input matInput   formControlName="filename"  [(ngModel)]="filename" >
+              <mat-error *ngIf="UpdateContentForm.get('filename')?.hasError('required')">
+                  Filename is Required!
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Description</mat-label>
+                <input  matInput  formControlName="description" [(ngModel)]="description" >
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Add tag</mat-label>
+                <input matInput [(ngModel)]="newTag" (keyup.enter)="addTag()" #tagInput formControlName="tags" >
+              </mat-form-field>
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
+                  {{ tag }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              </mat-chip-list>
+            
+        </form>
+
+        <div class="row" style="margin-top: 20px; display: flex;justify-content: center;align-items: center;">
+            <button type="confirm" style="font-size: large; background-color: red;" (click)="deleteContent()">Delete</button>
+            <button type="confirm" style="font-size: large; background-color: rgb(181, 181, 240);" (click)="shareContent()">Share</button>
+            <button type="confirm" style="font-size: large;" (click)="confirm()">Update</button> 
+        </div>
+        
+          
     
-
-    <button type="confirm" style="font-size: large;" (click)="confirm()"> Confirm</button>
-      
-
-    </div>
-
-  </div>
+        </div>
+    
+      </div>
+</body>
 
