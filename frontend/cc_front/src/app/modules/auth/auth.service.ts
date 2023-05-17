@@ -57,12 +57,7 @@ export class AuthService {
   }
 
   getUrlPath(): string {
-    if (this.getRole() =="ROLE_USER") {
-        return "user";
-    }else if (this.getRole() == "ROLE_ADMIN") {
-      return "admin";
-    }
-    return "";
+    return "gallery";
   }
 
   
