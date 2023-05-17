@@ -6,6 +6,8 @@ import { SharedModule } from '../shared/shared.module';
 import { InputNameComponent } from './input-name/input-name.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { UpdateContentComponent } from './update-content/update-content.component';
+import { UpdateFolderComponent } from './update-folder/update-folder.component';
+import { ShareContentComponent } from './share-content/share-content.component';
 
 
 
@@ -14,7 +16,9 @@ import { UpdateContentComponent } from './update-content/update-content.componen
     GalleryPhotoComponent,
     InputNameComponent,
     UploadFileComponent,
-    UpdateContentComponent
+    UpdateContentComponent,
+    UpdateFolderComponent,
+    ShareContentComponent
   ],
   imports: [
     CommonModule,

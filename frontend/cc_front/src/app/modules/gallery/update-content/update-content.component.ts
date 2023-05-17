@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GalleryService } from '../gallery.service';
 import { Observable, filter, of } from 'rxjs';
+import { ShareContentComponent } from '../share-content/share-content.component';
 
 @Component({
   selector: 'app-update-content',
@@ -23,6 +24,7 @@ export class UpdateContentComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UpdateContentComponent>,
+    public dialog: MatDialog,
     private galleryService: GalleryService){}
    /* @Inject(MAT_DIALOG_DATA) public dialogData: { value: Content }){
       this.filename = dialogData.value.fileName;
@@ -81,7 +83,8 @@ export class UpdateContentComponent implements OnInit {
 
 
     shareContent(){
-
+      const d = this.dialog.open(ShareContentComponent);
+  
     }
 
     
