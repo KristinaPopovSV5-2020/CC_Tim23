@@ -18,26 +18,30 @@
         </div>
         <div class="folders">
             <div class="card-group">
-                <div *ngFor="let folder of folders">
+                <div *ngFor="let folder of folders" (mouseenter)="showButton = true" (mouseleave)="showButton = false" class="element">
                     <div class="card"  (click)="onFolderClick(folder)">
                         <mat-icon class="mat-icon-folder card-img-top">folder</mat-icon>
                         <div class="card-body">
                         <h5 class="card-title">{{folder.name}}</h5>
                         </div>
+                        
                     </div>
+                    <button *ngIf="showButton" class="action-button" (click)="openDialog(folder)"><mat-icon style="font-size: 18px; margin-right: 3px;">edit</mat-icon></button>
                 </div>
                     
             </div>
         </div>
         <div class="podfolders">
             <div class="card-group">
-                <div *ngFor="let subfolder of subfolders"  (click)="onSubfolderClick(subfolder)">
+                <div *ngFor="let subfolder of subfolders"  (click)="onSubfolderClick(subfolder)"  (mouseenter)="showButtonSub = true" (mouseleave)="showButtonSub = false" class="element">
                     <div class="card">
                         <mat-icon  class="mat-icon-folder card-img-top">folder</mat-icon>
                         <div class="card-body">
                         <h5 class="card-title">{{subfolder.name}}</h5>
                         </div>
                     </div>
+                    <button *ngIf="showButtonSub" class="action-button" (click)="openDialog(subfolder)"><mat-icon style="font-size: 18px; margin-right: 3px;">edit</mat-icon></button>
+                
                 </div>
                     
             </div>

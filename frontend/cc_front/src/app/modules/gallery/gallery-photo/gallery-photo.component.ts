@@ -4,6 +4,7 @@ import { InputNameComponent } from '../input-name/input-name.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { UpdateContentComponent } from '../update-content/update-content.component';
+import { UpdateFolderComponent } from '../update-folder/update-folder.component';
 
 @Component({
   selector: 'app-gallery-photo',
@@ -17,6 +18,8 @@ export class GalleryPhotoComponent implements OnInit {
   contents: any[] = [];
   public path = "";
 
+  showButton = false;
+  showButtonSub = false;
 
   constructor(private galleryService: GalleryService,
     private dialog: MatDialog){}
@@ -116,6 +119,12 @@ export class GalleryPhotoComponent implements OnInit {
   editContent(content: any): void{
     const dialogRef = this.dialog.open(UpdateContentComponent);
 
+  }
+
+
+  openDialog(folder: any): void {
+    this.dialog.open(UpdateFolderComponent, {
+    });
   }
 
 }
