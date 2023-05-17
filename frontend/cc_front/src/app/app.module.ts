@@ -11,6 +11,7 @@ import { LayoutModule } from './modules/layout/layout.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GalleryModule } from './modules/gallery/gallery.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -25,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LayoutModule,
     SharedModule,
     HttpClientModule,
+    GalleryModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,

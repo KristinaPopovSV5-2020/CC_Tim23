@@ -1,0 +1,35 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<div id="wrapper">
+    <div id="dialog">
+      <form class="form" [formGroup]="UploadForm">
+        <mat-form-field>
+            <mat-label>File</mat-label>
+            <button class="butt-file" mat-icon-button matPrefix (click)="f_input.click()">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+            <input type="text" readonly matInput formControlName="file" [(ngModel)]="dialogData.value" />
+            <input
+              type="file"
+              multiple
+              hidden
+              #f_input
+              accept="image/*"
+              (change)="handleFileInputChangePicture(f_input.files !)"
+            />
+            <mat-error *ngIf="UploadForm.get('file')?.hasError('required')">
+              Required field!
+          </mat-error>
+          </mat-form-field>
+
+    </form>
+
+    <button type="confirm" style="font-size: large;" (click)="confirm()"> Confirm</button>
+      
+
+    </div>
+
+  </div>
+
