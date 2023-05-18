@@ -36,7 +36,7 @@
                     <div class="card">
                         <mat-icon  class="mat-icon-folder card-img-top">folder</mat-icon>
                         <div class="card-body">
-                        <h5 class="card-title">{{subfolder.name}}</h5>
+                        <h5 class="card-title">{{subfolder}}</h5>
                         </div>
                     </div>
                     <button *ngIf="showButtonSub" class="action-button" (click)="openDialog(subfolder)"><mat-icon style="font-size: 18px; margin-right: 3px;">edit</mat-icon></button>
@@ -51,7 +51,7 @@
                     <div class="card">
                         <mat-icon  class="mat-icon-content card-img-top">image</mat-icon>
                         <div class="card-body">
-                        <h5 class="card-title">{{splitFilename(content.dynamoAttributes.filename)}}</h5>
+                        <h5 class="card-title">{{splitFilename(content.filename)}}</h5>
                         </div>
                     </div>
                 </div>
