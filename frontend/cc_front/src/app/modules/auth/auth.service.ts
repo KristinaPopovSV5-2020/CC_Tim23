@@ -33,6 +33,12 @@ export class AuthService {
       });
     }
 
+    logout(): Observable<string> {
+      return this.http.get(environment.apiHost + 'api/logout', {
+        responseType: 'text',
+      });
+    }
+
   
   
     getUsername(): any{
