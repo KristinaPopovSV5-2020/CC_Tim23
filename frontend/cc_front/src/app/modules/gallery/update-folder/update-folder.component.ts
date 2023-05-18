@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GalleryService } from '../gallery.service';
 import { ShareContentComponent } from '../share-content/share-content.component';
 import { YesNoDialogComponent } from '../../shared/yes-no-dialog/yes-no-dialog.component';
@@ -13,6 +13,7 @@ export class UpdateFolderComponent {
 
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<UpdateFolderComponent>,
     public dialog: MatDialog,
     private galleryService: GalleryService){}

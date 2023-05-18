@@ -129,12 +129,15 @@ export class GalleryPhotoComponent implements OnInit {
 
 
   editContent(content: any): void{
-    const dialogRef = this.dialog.open(UpdateContentComponent);
+    const dialogRef = this.dialog.open(UpdateContentComponent,{
+      data: content
+    });
   }
 
 
   openDialog(folder: any): void {
     this.dialog.open(UpdateFolderComponent, {
+      data: folder
     });
   }
 
