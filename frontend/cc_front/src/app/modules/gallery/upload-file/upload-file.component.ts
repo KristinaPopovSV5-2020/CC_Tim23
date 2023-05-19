@@ -1,6 +1,6 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GalleryService } from '../gallery.service';
+import { GalleryService, UploadFile } from '../gallery.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,27 +10,29 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class UploadFileComponent  implements OnInit{
 
-  file_upload: File | null | undefined;
-
   UploadForm !: FormGroup;
-  tags: string[] = ['Tag 1', 'Tag 2', 'Tag 3'];
-  newTag: string = '';
+  newTag: any;
+  tags: any;
+  selectedFile: File | null = null;
 
- 
 
   constructor(private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UploadFileComponent>,
     private galleryService: GalleryService,
     @Inject(MAT_DIALOG_DATA) public dialogData: { value: string }){
     }
+    
+
+
 
   ngOnInit(): void {
-    console.log(this.dialogData.value)
     this.UploadForm = this.formBuilder.group({
-      filename: ['', Validators.required],
-      description: [''],
-      tags: [''],
-      file: ['', Validators.required]
+      file:['',
+          [
+            Validators.required,
+          ],
+      ],
+      
     });
     
   }
@@ -50,40 +52,48 @@ export class UploadFileComponent  implements OnInit{
     }
   }
 
-  @HostListener('document:keydown.enter', ['$event'])
-  handleEnterKey(event: KeyboardEvent): void {
-    if (event.target !== document.querySelector('input')) {
-      event.preventDefault();
-    }
+  processFileUpload(file: File, filename: string, album: string, description: string, tags: string): UploadFile {
+    const currentDate = new Date().toLocaleDateString(); // Get the current date as a string
+    const fileType = file.type; // Retrieve the file type from the uploaded file
+    const fileSize = `${(file.size / 1024).toFixed(2)}KB`; // Calculate the file size in KB
+    
+    const content: UploadFile = {
+      content: '',
+      fileName: filename,
+      album: album,
+      fileType: fileType,
+      fileSize: fileSize,
+      dateCreated: currentDate,
+      dateModified: currentDate,
+      desc: description,
+      tags: tags,
+    };
+  
+    return content;
   }
 
-  handleFileInputChangePicture(l: FileList): void {
-    this.file_upload = l.item(0);
-    if (l.length) {
-      const f = l[0];
-      const count = l.length > 1 ? `(+${l.length - 1} files)` : "";
-      this.UploadForm.patchValue({file: `${f.name}${count}`});
-      
-    } else {
-      this.UploadForm.patchValue({file: ``});
-    }
+  onFileSelected(event:any):void {
+    this.selectedFile = event.target.files[0];
+
   }
 
 
   confirm(){
-    if (this.UploadForm.valid){
-      const filename = this.UploadForm.value.filename;
-      const description = this.UploadForm.value.description;
-      const tags = this.tags;
-      const file = this.UploadForm.value.file;
+    if (this.UploadForm.valid){        
       this.dialogRef.close(this.dialogData.value);
+
     }
+
   }
 
-  close(){
-    this.dialogRef.close();
+  uploadFile() {
+    if (this.selectedFile) {
+      const fileContent = new Blob([this.selectedFile], { type: this.selectedFile.type });
+      const fileSize = this.selectedFile.size;
+      const fileType = this.selectedFile.type;
+
   }
 
 }
 
-
+}

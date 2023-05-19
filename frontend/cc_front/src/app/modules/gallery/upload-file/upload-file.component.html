@@ -37,8 +37,7 @@
               multiple
               hidden
               #f_input
-              accept="image/*"
-              (change)="handleFileInputChangePicture(f_input.files !)"
+              (change)="onFileSelected($event)"
             />
             <mat-error *ngIf="UploadForm.get('file')?.hasError('required')">
               Required field!
