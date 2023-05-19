@@ -47,6 +47,12 @@ export class GalleryService {
   
 }
 
+
+export interface ShareContent{
+  filepath: string,
+  sharedWith: string
+}
+
 export interface Content {
   content: string;
   fileName: string;
@@ -86,4 +92,13 @@ export interface UploadFile {
   desc: string;
   tags: string;
 }
+
+
+export interface SharedTable{
+  id: string,
+  filepath: string,
+  sharedWith: string,
+  username: string
+}
+
 

@@ -31,7 +31,6 @@ export class GalleryPhotoComponent implements OnInit {
     const sub = this.path.replaceAll("/", ",");
     this.galleryService.loadAlbum(sub).subscribe({
       next:(result)=>{
-        console.log(result);
         this.albums=result.subfolders;
         this.contents = result.objects
       }
@@ -136,8 +135,9 @@ export class GalleryPhotoComponent implements OnInit {
 
 
   openDialog(folder: any): void {
+    const f = this.authService.getUsername() + "/" + folder;
     this.dialog.open(UpdateFolderComponent, {
-      data: folder
+      data: f
     });
   }
 

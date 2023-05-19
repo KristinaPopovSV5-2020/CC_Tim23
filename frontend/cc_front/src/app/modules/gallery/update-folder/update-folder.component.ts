@@ -32,7 +32,7 @@ export class UpdateFolderComponent {
 
 
   shareFolder(){
-    const d = this.dialog.open(ShareContentComponent);
+    const d = this.dialog.open(ShareContentComponent, {data:this.data});
 
   }
 
