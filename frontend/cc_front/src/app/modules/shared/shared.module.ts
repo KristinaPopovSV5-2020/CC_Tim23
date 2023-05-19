@@ -6,11 +6,12 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { OkDialogComponent } from './ok-dialog/ok-dialog.component';
 import { YesNoDialogComponent } from './yes-no-dialog/yes-no-dialog.component';
 import { MaterialModule } from '../../../infrastructure/material.module';
+import { SubfolderDialogComponent } from './subfolder-dialog/subfolder-dialog.component';
 
 
 
 @NgModule({
-  declarations: [ButtonComponent,LinkComponent, ErrorDialogComponent, OkDialogComponent,YesNoDialogComponent],
+  declarations: [ButtonComponent,LinkComponent, ErrorDialogComponent, OkDialogComponent,YesNoDialogComponent,SubfolderDialogComponent],
   imports: [
     CommonModule,
     MaterialModule
