@@ -1,0 +1,74 @@
+.center {
+    margin: auto;
+    width: 60%;
+    height: 100%;
+    text-align: center;
+}
+
+mat-form-field{
+    width: 300px;
+}
+
+.card-group{
+    display: flex;
+}
+
+.card{
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    
+}
+
+
+.row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+
+button{
+    margin-left: 30px;
+    margin-bottom: 15px;
+    width: 100px;
+    background-color: blueviolet;
+}
+
+.mat-icon-content{
+    color: rgb(4, 3, 17);
+    transform: scale(2);
+}
+
+.mat-icon-folder{
+    color: rgb(243, 220, 74);
+    transform: scale(2);
+}
+
+.p-2{
+    justify-content: center;
+    text-align: center;
+    margin-left: 20px;
+}
+
+.card{
+    border: 2px solid white;
+}
+
+.element {
+    position: relative;
+    /* Ostali stilovi elementa */
+  }
+  
+.action-button {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 3px;
+    /* Ostali stilovi dugmeta */
+  }
