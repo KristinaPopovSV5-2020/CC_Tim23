@@ -23,20 +23,22 @@ export class UpdateContentComponent implements OnInit {
   public size = "100 MB";
   
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UpdateContentComponent>,
     public dialog: MatDialog,
-    private galleryService: GalleryService){}
-   /* @Inject(MAT_DIALOG_DATA) public dialogData: { value: Content }){
-      this.filename = dialogData.value.fileName;
-      this.description = dialogData.value.desc;
-      this.album = dialogData.value.album;
-      this.dateCreated = dialogData.value.dateCreated;
-      this.dateModified = dialogData.value.dateModified;
-      this.type =dialogData.value.type;
-      this.size = dialogData.value.size;
-    }*/
-    tags: string[] = ['Tag 1', 'Tag 2', 'Tag 3'];
+    private galleryService: GalleryService){
+      console.log(data);
+      this.filename = data.filename;
+      this.description = data.description;
+      this.album = data.album;
+      this.dateCreated = data.dateCreated;
+      this.dateModified = data.dateModified;
+      this.type =data.fileType;
+      this.size = data.fileSize;
+    }
+    tags: string[] = this.data.tags.split(",");
   newTag: string = '';
 
   addTag(): void {
@@ -71,8 +73,14 @@ export class UpdateContentComponent implements OnInit {
 
 
     confirm(){
-      if (this.UpdateContentForm.valid){        
-
+      if (this.UpdateContentForm.valid){   
+        console.log(this.filename);     
+        this.galleryService.updateFile(this.data.id,{fileName:this.filename,tags:this.tags,desc:this.description}).subscribe({
+          next:(result)=>{
+            console.log(result);
+            
+          }
+        })
       }
 
     }
@@ -87,7 +95,12 @@ export class UpdateContentComponent implements OnInit {
 
       d.afterClosed().subscribe(result => {
         if (result) {
-          //api da obrise 
+          this.galleryService.deleteFile(this.data.id).subscribe({
+            next:(result)=>{
+              console.log(result);
+              
+            }
+          })
         }
       });
 

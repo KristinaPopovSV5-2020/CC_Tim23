@@ -27,12 +27,15 @@ export class GalleryPhotoComponent implements OnInit {
     private dialog: MatDialog){}
 
   ngOnInit(): void {
-    this.galleryService.loadGallery().subscribe({
-      next: (res) => {
-        this.albums = res.albums;
-      },
-    })
     this.path = this.authService.getUsername() + "/";
+    const sub = this.path.replaceAll("/", ",");
+    this.galleryService.loadAlbum(sub).subscribe({
+      next:(result)=>{
+        console.log(result);
+        this.albums=result.subfolders;
+        this.contents = result.objects
+      }
+    })
   }
 
 
@@ -91,39 +94,60 @@ export class GalleryPhotoComponent implements OnInit {
         //location.reload();
       }
     });
-
-
-
   }
 
-  onSubfolderClick(subfolder: any): void{
-    this.path = this.path + subfolder.name + "/";
-    //da se ucitaju svi subfolderi ove putanje i kontentni i azuriraju liste
+  onSubfolderClick(subfolder: string): void{
+    this.path = this.path + subfolder + "/";
+    const sub = this.path.replaceAll("/", ",");
+    this.contents=[];
+    this.subfolders=[];
+    console.log(sub)
+    this.galleryService.loadAlbum(sub).subscribe({
+      next:(result)=>{
+        console.log(result);
+        this.subfolders=result.subfolders;
+        this.contents = result.objects
+      }
+    })
   }
 
   onFolderClick(folder: any): void{
-    this.path = folder + "/";
-    this.galleryService.loadAlbum(folder).subscribe({
-      next:(res)=>{
-        console.log(res);
-        this.contents=res;
+    this.path = this.authService.getUsername()+"/"
+    this.path = this.path + folder + "/";
+    const sub = this.path.replaceAll("/", ",");
+    this.contents=[];
+    this.subfolders=[];
+    console.log(sub)
+    this.galleryService.loadAlbum(sub).subscribe({
+      next:(result)=>{
+        console.log(result);
+        this.subfolders=result.subfolders;
+        this.contents = result.objects
       }
     })
   }
 
 
   editContent(content: any): void{
-    const dialogRef = this.dialog.open(UpdateContentComponent);
+    const dialogRef = this.dialog.open(UpdateContentComponent,{
+      data: content
+    });
   }
 
 
   openDialog(folder: any): void {
     this.dialog.open(UpdateFolderComponent, {
+      data: folder
     });
   }
 
   splitFilename(filename: string): string {
     const parts = filename.split('/');
+    return parts[parts.length - 1];
+  }
+
+  splitAlbumName(album: string): string {
+    const parts = album.split('/');
     return parts[parts.length - 1];
   }
   
@@ -133,20 +157,23 @@ export interface Folder {
   name: string
 }
 
+export interface GalleryResponse {
+  subfolders:string[],
+  objects:FileData[]
+}
+
 export interface FileData {
   s3_object: string;
-  dynamoAttributes: {
-    filename: string;
-    album: string;
-    dateCreated: string;
-    fileSize: string;
-    dateModified: string;
-    fileType: string;
-    username: string;
-    id: string;
-    tags: string;
-    desc: string;
-  };
+  filename: string;
+  album: string;
+  dateCreated: string;
+  fileSize: string;
+  dateModified: string;
+  fileType: string;
+  username: string;
+  id: string;
+  tags: string;
+  desc: string;
 }
 
 export interface UploadFile {

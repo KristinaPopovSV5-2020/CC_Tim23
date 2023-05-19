@@ -21,6 +21,14 @@ export class GalleryService {
   uploadFile(file:Content): Observable<any> {
     return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/upload",file);
   }
+
+  updateFile(id:string,file:any):Observable<any>{
+    return this.http.put("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/update/"+id,file);
+  }
+
+  deleteFile(id:string):Observable<any>{
+    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/delete/"+id);
+  }
 }
 
 export interface Content {
