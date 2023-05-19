@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>Choose a folder</h1>
+<div mat-dialog-actions style="display: flex;">
+  <ul>
+    <li *ngFor="let sub of subfolders" (click)="choose(sub)">{{sub}}</li>
+  </ul>
+</div>
+

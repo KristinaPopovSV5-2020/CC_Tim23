@@ -5,6 +5,7 @@ import { GalleryService } from '../gallery.service';
 import { Observable, filter, of } from 'rxjs';
 import { ShareContentComponent } from '../share-content/share-content.component';
 import { YesNoDialogComponent } from '../../shared/yes-no-dialog/yes-no-dialog.component';
+import { SubfolderDialogComponent } from '../../shared/subfolder-dialog/subfolder-dialog.component';
 
 @Component({
   selector: 'app-update-content',
@@ -87,7 +88,7 @@ export class UpdateContentComponent implements OnInit {
     }
 
     close(){
-      this.dialogRef.close();
+      this.dialogRef.close("a");
     }
 
 
@@ -107,11 +108,25 @@ export class UpdateContentComponent implements OnInit {
 
 
     }
-
-
+   
     shareContent(){
       const d = this.dialog.open(ShareContentComponent, {data:this.filename});
   
+    }
+
+    openSubfolderDialog(){
+      const d = this.dialog.open(SubfolderDialogComponent);
+
+      d.afterClosed().subscribe(result => {
+        if (result) {
+          this.galleryService.moveFile({id:this.data.id,album:result}).subscribe({
+            next:(result)=>{
+              console.log(result);
+              
+            }
+          })
+        }
+      });
     }
 
     
