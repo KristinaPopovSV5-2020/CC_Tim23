@@ -49,5 +49,26 @@ export class AuthService {
     return false;
   }
 
+  getRole(): string | null{
+    if (this.isLoggedIn()) {
+      const accessToken: string = localStorage.getItem('user') || '';
+      const helper = new JwtHelperService();
+      const role = helper.decodeToken(accessToken).role[0].name;
+      return role;
+    }
+    return null;
+  }
+
+
+  setUser(): void {
+    if (this.isLoggedIn()) {
+      const accessToken: string = localStorage.getItem('user') || '';
+      const helper = new JwtHelperService();
+      const role = helper.decodeToken(accessToken).role[0].name;
+      this.user$.next(role);
+    }
+    
+  }
+
   
 }
