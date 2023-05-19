@@ -43,6 +43,10 @@ export class GalleryService {
     return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/shared/" + folder);
   }
 
+  getSharedGallery():Observable<any>{
+    return this.http.get(" https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/shared_gallery");
+  }
+
 
   
 }

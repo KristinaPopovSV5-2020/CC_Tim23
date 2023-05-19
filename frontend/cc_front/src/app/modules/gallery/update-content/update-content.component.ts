@@ -30,7 +30,6 @@ export class UpdateContentComponent implements OnInit {
     public dialogRef: MatDialogRef<UpdateContentComponent>,
     public dialog: MatDialog,
     private galleryService: GalleryService){
-      console.log(data);
       this.filename = data.filename;
       this.description = data.description;
       this.album = data.album;

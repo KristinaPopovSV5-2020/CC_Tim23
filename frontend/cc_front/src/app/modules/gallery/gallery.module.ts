@@ -8,6 +8,9 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
 import { UpdateContentComponent } from './update-content/update-content.component';
 import { UpdateFolderComponent } from './update-folder/update-folder.component';
 import { ShareContentComponent } from './share-content/share-content.component';
+import { SharedGalleryComponent } from './shared-gallery/shared-gallery.component';
+import { ViewSharedContentComponent } from './view-shared-content/view-shared-content.component';
+import { ViewSharedFolderComponent } from './view-shared-folder/view-shared-folder.component';
 
 
 
@@ -18,7 +21,10 @@ import { ShareContentComponent } from './share-content/share-content.component';
     UploadFileComponent,
     UpdateContentComponent,
     UpdateFolderComponent,
-    ShareContentComponent
+    ShareContentComponent,
+    SharedGalleryComponent,
+    ViewSharedContentComponent,
+    ViewSharedFolderComponent
   ],
   imports: [
     CommonModule,
