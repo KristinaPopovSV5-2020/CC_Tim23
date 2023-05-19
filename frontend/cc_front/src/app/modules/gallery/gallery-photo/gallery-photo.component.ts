@@ -132,6 +132,17 @@ export class GalleryPhotoComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateContentComponent,{
       data: content
     });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const lastIndex = content.filename.lastIndexOf('/');
+        const album=(content.filename.substring(0,lastIndex)+"/").replaceAll("/",",")
+        this.galleryService.loadAlbum(album).subscribe({
+          next:(result)=>{
+            this.contents = result.objects
+          }
+        })
+      }
+    });
   }
 
 

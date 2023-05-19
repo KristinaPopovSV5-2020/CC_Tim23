@@ -29,6 +29,14 @@ export class GalleryService {
   deleteFile(id:string):Observable<any>{
     return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/delete/"+id);
   }
+
+  moveFile(data:any):Observable<any>{
+    return this.http.put("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/move/",data);
+  }
+
+  getSubfolders():Observable<any>{
+    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/subfolders/markic");
+  }
 }
 
 export interface Content {
