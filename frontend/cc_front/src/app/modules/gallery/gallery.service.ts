@@ -30,6 +30,20 @@ export class GalleryService {
     return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/delete/"+id);
   }
 
+
+  shareContent(content: any):Observable<any>{
+    return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/share_content",content);
+
+  }
+
+  deleteSharedContent(id:string):Observable<any>{
+    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/share_content/"+id);
+  }
+
+  getSharedContent(folder:string): Observable<any> {
+    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/shared/" + folder);
+  }
+  
   moveFile(data:any):Observable<any>{
     return this.http.put("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/move/",data);
   }
@@ -37,6 +51,17 @@ export class GalleryService {
   getSubfolders():Observable<any>{
     return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/subfolders/markic");
   }
+
+
+  
+}
+
+
+export interface ShareContent{
+  filepath: string,
+  sharedWith: string
+  
+
 }
 
 export interface Content {
@@ -78,4 +103,13 @@ export interface UploadFile {
   desc: string;
   tags: string;
 }
+
+
+export interface SharedTable{
+  id: string,
+  filepath: string,
+  sharedWith: string,
+  username: string
+}
+
 

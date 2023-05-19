@@ -22,6 +22,7 @@ export class UpdateContentComponent implements OnInit {
   public dateModified = "12/09/2009";
   public type = "jpg";
   public size = "100 MB";
+
   
 
   constructor(
@@ -109,7 +110,7 @@ export class UpdateContentComponent implements OnInit {
     }
    
     shareContent(){
-      const d = this.dialog.open(ShareContentComponent);
+      const d = this.dialog.open(ShareContentComponent, {data:this.filename});
   
     }
 

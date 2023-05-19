@@ -1,0 +1,47 @@
+#navigation {
+    width: 100%;
+    height: 10%;
+    justify-content: flex-end;
+  }
+  
+  span{
+    color:white
+  }
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .logo_name{
+    margin-left: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #665582;
+  }
+  mat-mdc-icon-button {
+    margin-top: 0px;
+    padding-top: 0px;
+  
+  }
+  
+  mat-toolbar-single-row{
+  
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+  }
+  
+  mat-icon{
+    color: #665582;
+    font-size: 38px;
+      height: 38px ;
+      width: 38px;
+      margin-left: 15px;
+    
+  }
+
+  mat-toolbar{
+    background-color: rgb(195, 177, 225);
+
+  }
+  
+  
