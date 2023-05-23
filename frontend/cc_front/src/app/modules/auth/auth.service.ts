@@ -19,6 +19,7 @@ export class AuthService {
     userState$ = this.user$.asObservable();
   
     constructor(private http: HttpClient) {
+      this.user$.next(null);
     }
   
     login(auth: any): Observable<any> {

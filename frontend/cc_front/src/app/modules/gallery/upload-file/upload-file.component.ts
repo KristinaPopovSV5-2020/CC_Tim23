@@ -1,7 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GalleryService, UploadFile } from '../gallery.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Content, GalleryService, UploadFile } from '../gallery.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
+import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-upload-file',
@@ -11,28 +13,29 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class UploadFileComponent  implements OnInit{
 
   UploadForm !: FormGroup;
-  newTag: any;
-  tags: any;
+  newTag: string = '';
+  tags: string[] = [];
+  formData: FormData | undefined;
   selectedFile: File | null = null;
 
 
   constructor(private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<UploadFileComponent>,
     private galleryService: GalleryService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public dialogData: { value: string }){
     }
     
-
-
-
   ngOnInit(): void {
     this.UploadForm = this.formBuilder.group({
-      file:['',
+      filename:['',
           [
             Validators.required,
           ],
       ],
-      
+      description:['',[]],
+      tags:['',[]],  
+      file: [''] 
     });
     
   }
@@ -52,26 +55,6 @@ export class UploadFileComponent  implements OnInit{
     }
   }
 
-  processFileUpload(file: File, filename: string, album: string, description: string, tags: string): UploadFile {
-    const currentDate = new Date().toLocaleDateString(); // Get the current date as a string
-    const fileType = file.type; // Retrieve the file type from the uploaded file
-    const fileSize = `${(file.size / 1024).toFixed(2)}KB`; // Calculate the file size in KB
-    
-    const content: UploadFile = {
-      content: '',
-      fileName: filename,
-      album: album,
-      fileType: fileType,
-      fileSize: fileSize,
-      dateCreated: currentDate,
-      dateModified: currentDate,
-      desc: description,
-      tags: tags,
-    };
-  
-    return content;
-  }
-
   onFileSelected(event:any):void {
     this.selectedFile = event.target.files[0];
 
@@ -83,17 +66,69 @@ export class UploadFileComponent  implements OnInit{
       this.dialogRef.close(this.dialogData.value);
 
     }
+  }
 
+  close(){
+    this.dialogRef.close();
   }
 
   uploadFile() {
     if (this.selectedFile) {
-      const fileContent = new Blob([this.selectedFile], { type: this.selectedFile.type });
-      const fileSize = this.selectedFile.size;
-      const fileType = this.selectedFile.type;
+      this.formData = new FormData();
+      this.formData?.append('file', this.selectedFile, this.selectedFile.name);
+      this.formData?.set('Content-Type', 'multipart/form-data');
+      this.formData?.append('filename', this.parseFilename());
+      this.formData?.append('size', this.selectedFile?.size.toString()!);
+      this.formData?.append('type', this.selectedFile?.type! );
 
+      this.formData?.append('desc', this.UploadForm.value.description);
+      this.formData?.append('tags', this.tags.toString());
+      this.galleryService.uploadFile(this.formData).subscribe({
+        next:(res)=>{
+          const dialogRef = this.dialog.open(OkDialogComponent, {
+            data : {
+              dialogMessage: "File uploaded."
+            }
+          })
+        },
+        error:(err)=> {
+          if (err.code = 400) {
+            const dialogRef = this.dialog.open(ErrorDialogComponent, {
+              data : {
+                dialogMessage: "Choose a filename that is unique."
+              }
+            })
+          }
+        }
+      })
+
+      
+  }
+}
+  @HostListener('document:keydown.enter', ['$event'])
+  handleEnterKey(event: KeyboardEvent): void {
+    if (event.target !== document.querySelector('input')) {
+      event.preventDefault();
+    }
+  }
+
+  handleFileInput(l: FileList): void {
+    this.selectedFile = l.item(0);
+    if (l.length) {
+      const f = l[0];
+      const count = l.length > 1 ? `(+${l.length - 1} files)`: "";
+      this.UploadForm.patchValue({file: `${f.name}${count}`});
+    } else {
+      this.UploadForm.patchValue({file: ``});
+    }
+  }
+
+  parseFilename(): string | Blob {
+    const fileParts = this.selectedFile?.name.split('.');
+    return "markic/" + this.UploadForm.value.filename + "." + fileParts![fileParts!.length - 1];
   }
 
 }
 
-}
+
+

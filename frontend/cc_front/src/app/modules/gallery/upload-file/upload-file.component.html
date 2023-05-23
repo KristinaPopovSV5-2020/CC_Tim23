@@ -37,7 +37,7 @@
               multiple
               hidden
               #f_input
-              (change)="onFileSelected($event)"
+              (change)="handleFileInput(f_input.files !)"
             />
             <mat-error *ngIf="UploadForm.get('file')?.hasError('required')">
               Required field!
@@ -48,7 +48,7 @@
 
     <div class="row" style="margin-top: 10px; display: flex;justify-content: center;align-items: center;">
         <button type="confirm" style="font-size: large; background-color: grey;" (click)="close()">Close</button>
-        <button type="confirm" style="font-size: large; margin-left: 20px;" (click)="confirm()">Update</button> 
+        <button type="confirm" style="font-size: large; margin-left: 20px;" (click)="uploadFile()">Upload</button> 
     </div>
       
 

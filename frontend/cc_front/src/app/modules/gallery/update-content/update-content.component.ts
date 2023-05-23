@@ -113,6 +113,16 @@ export class UpdateContentComponent implements OnInit {
   
     }
 
+    download() {
+      const content = "data:" + this.type + ";base64," + this.data.s3_object;
+      const link = document.createElement("a");
+      link.download = this.data.filename;
+      link.href = content;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     
 
   
