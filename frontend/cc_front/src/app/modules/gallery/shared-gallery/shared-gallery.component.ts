@@ -53,11 +53,9 @@ export class SharedGalleryComponent implements OnInit {
     }
 
     onSubfolderClick(subfolder: any): void{
-      const f = subfolder.username+"/"+ subfolder.album;
-      const sub = f.replaceAll("/", ",");
+      const sub = subfolder.filepath.replaceAll("/", ",");
       this.contents=[];
       this.subfolders=[];
-      console.log(sub)
       this.galleryService.loadAlbum(sub).subscribe({
         next:(result)=>{
           this.subfolders=result.subfolders;
@@ -67,11 +65,9 @@ export class SharedGalleryComponent implements OnInit {
     }
   
     onFolderClick(folder: any): void{
-      const f = folder.username + "/"+ folder.album;
-      const sub = f.replaceAll("/", ",");
+      const sub = folder.filepath.replaceAll("/", ",");
       this.contents=[];
       this.subfolders=[];
-      console.log(sub)
       this.galleryService.loadAlbum(sub).subscribe({
         next:(result)=>{
           this.subfolders=result.subfolders;

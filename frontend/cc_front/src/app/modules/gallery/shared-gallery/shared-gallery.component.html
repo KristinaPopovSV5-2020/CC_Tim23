@@ -14,7 +14,7 @@
                     <div class="card"  (click)="onFolderClick(folder)">
                         <mat-icon class="mat-icon-folder card-img-top">folder</mat-icon>
                         <div class="card-body">
-                        <h5 class="card-title">{{folder.album}}</h5>
+                        <h5 class="card-title">{{splitFilename(folder.filepath)}}</h5>
                         </div>
                     </div>
                     <button *ngIf="showButton" class="action-button" (click)="openDialog(folder)"><mat-icon style="font-size: 18px; margin-right: 3px;">edit</mat-icon></button>
@@ -43,7 +43,7 @@
                     <div class="card">
                         <mat-icon  class="mat-icon-content card-img-top">image</mat-icon>
                         <div class="card-body">
-                        <h5 class="card-title">{{splitFilename(content.filename)}}</h5>
+                        <h5 class="card-title">{{splitFilename(content.filepath)}}</h5>
                         </div>
                     </div>
                 </div>
