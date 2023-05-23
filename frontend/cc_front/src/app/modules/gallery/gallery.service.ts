@@ -18,8 +18,8 @@ export class GalleryService {
     return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery/" + album,);
   }
 
-  uploadFile(file:Content): Observable<any> {
-    return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/upload",file);
+  uploadFile(file:FormData): Observable<any> {
+    return this.http.post<FormData>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/upload",file);
   }
 
   updateFile(id:string,file:any):Observable<any>{
@@ -69,13 +69,10 @@ export interface ShareContent{
 }
 
 export interface Content {
-  content: string;
+  content: Blob;
   fileName: string;
-  album: string;
   fileType: string;
   fileSize: string;
-  dateCreated: string;
-  dateModified: string;
   desc: string;
   tags: string;
 }

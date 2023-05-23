@@ -19,6 +19,7 @@ export class AuthService {
     userState$ = this.user$.asObservable();
   
     constructor(private http: HttpClient) {
+      this.user$.next(null);
     }
   
     login(auth: any): Observable<any> {
@@ -30,6 +31,12 @@ export class AuthService {
     signUp(user: any): Observable<any> {
       return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/register_user", user, {
         headers: this.headers,
+      });
+    }
+
+    logout(): Observable<string> {
+      return this.http.get(environment.apiHost + 'api/logout', {
+        responseType: 'text',
       });
     }
 

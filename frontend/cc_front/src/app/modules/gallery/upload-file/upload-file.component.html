@@ -6,23 +6,26 @@
     <div id="dialog">
       <form class="form" [formGroup]="UploadForm">
         <mat-form-field appearance="fill">
-          <mat-label>Filename</mat-label>
-          <input matInput   formControlName="filename">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Description</mat-label>
-            <input  matInput  formControlName="description" >
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Add tag</mat-label>
-            <input matInput (keyup.enter)="addTag()" #tagInput formControlName="tags" >
+            <mat-label>Filename</mat-label>
+            <input matInput   formControlName="filename" >
+            <mat-error *ngIf="UploadForm.get('filename')?.hasError('required')">
+                Filename is Required!
+            </mat-error>
           </mat-form-field>
-        <mat-chip-list #chipList>
-            <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
-              {{ tag }}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-          </mat-chip-list>
+          <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <input  matInput  formControlName="description">
+          </mat-form-field>
+          <mat-form-field>
+              <mat-label>Add tag</mat-label>
+              <input matInput [(ngModel)]="newTag" (keyup.enter)="addTag()" #tagInput formControlName="tags" >
+            </mat-form-field>
+          <mat-chip-list #chipList>
+              <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
+                {{ tag }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
         <mat-form-field>
             <mat-label>File</mat-label>
             <button class="butt-file" mat-icon-button matPrefix (click)="f_input.click()">
@@ -34,8 +37,7 @@
               multiple
               hidden
               #f_input
-              accept="image/*"
-              (change)="handleFileInputChangePicture(f_input.files !)"
+              (change)="handleFileInput(f_input.files !)"
             />
             <mat-error *ngIf="UploadForm.get('file')?.hasError('required')">
               Required field!
@@ -44,7 +46,10 @@
 
     </form>
 
-    <button type="confirm" style="font-size: large;" (click)="confirm()"> Confirm</button>
+    <div class="row" style="margin-top: 10px; display: flex;justify-content: center;align-items: center;">
+        <button type="confirm" style="font-size: large; background-color: grey;" (click)="close()">Close</button>
+        <button type="confirm" style="font-size: large; margin-left: 20px;" (click)="uploadFile()">Upload</button> 
+    </div>
       
 
     </div>

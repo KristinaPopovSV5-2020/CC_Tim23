@@ -5,9 +5,9 @@
   <mat-toolbar id="toolbar" [ngStyle]="{'background-color':color}">
       <span class="logo_name">App</span>
       <span class="example-spacer"></span>
-      <app-link *ngIf="role === null" class="link" text="Log in" source="login"></app-link>
-      <app-link *ngIf="role === null" class="link" text="Sign up" source="signup" style="background-color: #665582;border-radius: 15px;"></app-link>
+      <app-link *ngIf="logged === false" class="link" text="Log in" source="login"></app-link>
+      <app-link *ngIf="logged === false" class="link" text="Sign up" source="signup" style="background-color: #665582;border-radius: 15px;"></app-link>
       
-      <app-user-toolbar *ngIf="role === 'ROLE_USER'"></app-user-toolbar>
+      <app-user-toolbar *ngIf="logged === true"></app-user-toolbar>
   
   </mat-toolbar>

@@ -133,7 +133,17 @@ export class UpdateContentComponent implements OnInit {
   
     }
 
-    openSubfolderDialog(){
+    download() {
+      const content = "data:" + this.type + ";base64," + this.data.s3_object;
+      const link = document.createElement("a");
+      link.download = this.data.filename;
+      link.href = content;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+openSubfolderDialog(){
       const d = this.dialog.open(SubfolderDialogComponent);
 
       d.afterClosed().subscribe(result => {
