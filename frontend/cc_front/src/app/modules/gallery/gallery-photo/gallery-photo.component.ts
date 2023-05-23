@@ -31,7 +31,6 @@ export class GalleryPhotoComponent implements OnInit {
     const sub = this.path.replaceAll("/", ",");
     this.galleryService.loadAlbum(sub).subscribe({
       next:(result)=>{
-        console.log(result);
         this.albums=result.subfolders;
         this.contents = result.objects
       }
@@ -132,12 +131,24 @@ export class GalleryPhotoComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateContentComponent,{
       data: content
     });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const lastIndex = content.filename.lastIndexOf('/');
+        const album=(content.filename.substring(0,lastIndex)+"/").replaceAll("/",",")
+        this.galleryService.loadAlbum(album).subscribe({
+          next:(result)=>{
+            this.contents = result.objects
+          }
+        })
+      }
+    });
   }
 
 
   openDialog(folder: any): void {
+    const f = this.authService.getUsername() + "/" + folder;
     this.dialog.open(UpdateFolderComponent, {
-      data: folder
+      data: f
     });
   }
 

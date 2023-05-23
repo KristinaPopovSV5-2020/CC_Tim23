@@ -5,6 +5,8 @@ import { GalleryService } from '../gallery.service';
 import { Observable, filter, of } from 'rxjs';
 import { ShareContentComponent } from '../share-content/share-content.component';
 import { YesNoDialogComponent } from '../../shared/yes-no-dialog/yes-no-dialog.component';
+import { SubfolderDialogComponent } from '../../shared/subfolder-dialog/subfolder-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-update-content',
@@ -21,6 +23,8 @@ export class UpdateContentComponent implements OnInit {
   public dateModified = "12/09/2009";
   public type = "jpg";
   public size = "100 MB";
+
+  public path="";
   
 
   constructor(
@@ -29,8 +33,10 @@ export class UpdateContentComponent implements OnInit {
     public dialogRef: MatDialogRef<UpdateContentComponent>,
     public dialog: MatDialog,
     private galleryService: GalleryService){
-      console.log(data);
-      this.filename = data.filename;
+      const lastIndex = data.filename.lastIndexOf('/');
+      const lastDot=data.filename.lastIndexOf('.');
+      this.path=data.filename.substring(0,lastIndex)+"/";
+      this.filename = data.filename.substring(lastIndex+1,lastDot);
       this.description = data.description;
       this.album = data.album;
       this.dateCreated = data.dateCreated;
@@ -40,6 +46,8 @@ export class UpdateContentComponent implements OnInit {
     }
     tags: string[] = this.data.tags.split(",");
   newTag: string = '';
+
+
 
   addTag(): void {
     const tag = this.newTag.trim();
@@ -65,7 +73,11 @@ export class UpdateContentComponent implements OnInit {
               Validators.required,
             ],
         ],
-        description:['',[]],
+        description:['',
+        [
+          Validators.required,
+        ]
+      ],
         tags:['',[]],   
       });
       
@@ -75,10 +87,17 @@ export class UpdateContentComponent implements OnInit {
     confirm(){
       if (this.UpdateContentForm.valid){   
         console.log(this.filename);     
-        this.galleryService.updateFile(this.data.id,{fileName:this.filename,tags:this.tags,desc:this.description}).subscribe({
+        this.galleryService.updateFile(this.data.id,{fileName:this.path+this.filename+"."+this.type,tags:this.tags,desc:this.description}).subscribe({
           next:(result)=>{
-            console.log(result);
+            alert("File updated")
             
+          },
+          error:(error)=>{
+            if (error instanceof HttpErrorResponse){
+              if(error.status==400){
+                alert("Name already exists")
+              }
+            }
           }
         })
       }
@@ -86,7 +105,7 @@ export class UpdateContentComponent implements OnInit {
     }
 
     close(){
-      this.dialogRef.close();
+      this.dialogRef.close("a");
     }
 
 
@@ -97,8 +116,10 @@ export class UpdateContentComponent implements OnInit {
         if (result) {
           this.galleryService.deleteFile(this.data.id).subscribe({
             next:(result)=>{
-              console.log(result);
-              
+              alert("File deleted")
+            },
+            error:(error)=>{
+
             }
           })
         }
@@ -106,10 +127,9 @@ export class UpdateContentComponent implements OnInit {
 
 
     }
-
-
+   
     shareContent(){
-      const d = this.dialog.open(ShareContentComponent);
+      const d = this.dialog.open(ShareContentComponent, {data:this.filename});
   
     }
 
@@ -121,6 +141,24 @@ export class UpdateContentComponent implements OnInit {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+openSubfolderDialog(){
+      const d = this.dialog.open(SubfolderDialogComponent);
+
+      d.afterClosed().subscribe(result => {
+        if (result) {
+          this.galleryService.moveFile({id:this.data.id,album:result}).subscribe({
+            next:(result)=>{
+              alert("File moved")
+              
+            },
+            error:(error)=>{
+
+            }
+          })
+        }
+      });
     }
 
     
