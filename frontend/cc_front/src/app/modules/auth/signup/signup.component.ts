@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.component';
 import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
@@ -70,6 +70,9 @@ export class SignupComponent implements OnInit{
           [
             Validators.required,
             Validators.minLength(8),
+            this.hasCapitalLetter,
+            this.hasSpecialCharacter,
+            this.hasNumber
           ],
       ],
       confirmpsw:['',
@@ -96,11 +99,11 @@ export class SignupComponent implements OnInit{
         username:this.signupForm.value.username
       }).subscribe({
         next: (result) => {
-          console.log(result);
+          alert("Success!")
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
-            console.log(error);
+              alert("Username already exists");
           }
         },
       });
@@ -127,11 +130,35 @@ export class SignupComponent implements OnInit{
     });
   }
 
+  hasSpecialCharacter(control: FormControl) {
+    const regex = /[!@#$%^&*(),.?":{}|<>]/;
 
-  
-  
+    if (!regex.test(control.value)) {
+      return { specialCharacter: true };
+    }
 
-  
+    return null;
+  }
+
+  hasCapitalLetter(control: FormControl) {
+    const regex = /[A-Z]/;
+
+    if (!regex.test(control.value)) {
+      return { capitalLetter: true };
+    }
+
+    return null;
+  }
+
+  hasNumber(control: FormControl) {
+    const regex = /\d/;
+
+    if (!regex.test(control.value)) {
+      return { num: true };
+    }
+
+    return null;
+  }
 
   
 }
