@@ -29,5 +29,4 @@ export class UserToolbarComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-
 }

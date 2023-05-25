@@ -17,6 +17,8 @@ export class SharedGalleryComponent implements OnInit {
   subfolders: any []=[];
   contents: any[]=[];
 
+  path:string='';
+
   
   showButton = false;
   showButtonSub = false;
@@ -53,7 +55,7 @@ export class SharedGalleryComponent implements OnInit {
     }
 
     onSubfolderClick(subfolder: any): void{
-      const sub = subfolder.filepath.replaceAll("/", ",");
+      const sub = this.path.replaceAll("/", ",") + subfolder.replaceAll("/", ",") + ",";
       this.contents=[];
       this.subfolders=[];
       this.galleryService.loadAlbum(sub).subscribe({
@@ -65,7 +67,8 @@ export class SharedGalleryComponent implements OnInit {
     }
   
     onFolderClick(folder: any): void{
-      const sub = folder.filepath.replaceAll("/", ",");
+      const sub = folder.filepath.replaceAll("/", ",")+ ",";
+      this.path=folder.filepath+"/"
       this.contents=[];
       this.subfolders=[];
       this.galleryService.loadAlbum(sub).subscribe({
@@ -82,6 +85,11 @@ export class SharedGalleryComponent implements OnInit {
         data: folder.username + "/" + folder.album
       });
 
+    }
+
+    splitAlbumName(album: string): string {
+      const parts = album.split('/');
+      return parts[parts.length - 1];
     }
 
 

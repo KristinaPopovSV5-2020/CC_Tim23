@@ -4,6 +4,7 @@
 </head>
 <div id="wrapper">
     <div id="dialog">
+      <mat-label>Path: {{path}}</mat-label>
       <form class="form" [formGroup]="InputForm">
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
@@ -11,12 +12,13 @@
           <mat-error *ngIf="InputForm.get('name')?.hasError('required')">
               Name is Required!
           </mat-error>
+          <mat-error *ngIf="InputForm.get('name')?.hasError('specialCharacter')">
+            Album name can't contain special characters
+          </mat-error>
       </mat-form-field>
     </form>
-
+    <div class="p-2"><button (click)="addSubfolder()"><mat-icon>create_new_folder</mat-icon>Add subfolder</button></div>
     <button type="confirm" style="font-size: large;" (click)="confirm()"> Confirm</button>
-      
-
     </div>
 
   </div>

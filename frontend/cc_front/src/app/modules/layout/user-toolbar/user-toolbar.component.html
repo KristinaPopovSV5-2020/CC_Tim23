@@ -3,5 +3,7 @@
     rel="stylesheet"/>
   </head>
   <mat-toolbar id="toolbar" [ngStyle]="{'background-color':color}">
-      <app-link class="link" text="Log out" (click)="logout()"></app-link>
+    <app-link class="link" text="Your gallery" source="gallery"></app-link>
+    <app-link class="link" text="Shared gallery" source="shared-gallery"></app-link>
+    <app-link class="link" text="Log out" (click)="logout()"></app-link>
   </mat-toolbar>

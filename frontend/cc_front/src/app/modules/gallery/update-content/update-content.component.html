@@ -8,7 +8,6 @@
             <h2>Update file</h2>
             <div class="card flex-row flex-wrap">
                 <div style="display:inline-flex;margin: 2px; float: left;">
-                    <h4 style="margin-left: 5px; margin-top:0px; margin-bottom: 0px;"><b>Album:</b> {{album}}</h4>
                     <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Created:</b> {{dateCreated}}</h4>
                     <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Modified:</b> {{dateModified}}</h4>
                     <h4 style="margin-top:0px; margin-bottom: 0px;"><b>Size:</b> {{size}}</h4>
@@ -21,6 +20,9 @@
               <input matInput   formControlName="filename"  [(ngModel)]="filename" >
               <mat-error *ngIf="UpdateContentForm.get('filename')?.hasError('required')">
                   Filename is Required!
+              </mat-error>
+              <mat-error *ngIf="UpdateContentForm.get('filename')?.hasError('specialCharacter')">
+                Filename can't contain special characters
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -44,10 +46,11 @@
             <button type="confirm" style="font-size: large; background-color: grey;" (click)="close()">Close</button>
             <button type="confirm" style="font-size: large; background-color: red;" (click)="deleteContent()">Delete</button>
             <button type="confirm" style="font-size: large; background-color: rgb(181, 181, 240);" (click)="shareContent()">Share</button>
-            <button type="confirm" style="font-size: large; background-color: rgb(181, 181, 240);" (click)="download()">Download</button>
             <button type="confirm" style="font-size: large;" (click)="confirm()">Update</button> 
             <button type="confirm" style="font-size: large; background-color: rgb(134, 151, 204);" (click)="openSubfolderDialog()">Move</button>
-
+        </div>
+        <div>
+          <button type="confirm" style="font-size: large; background-color: rgb(201, 181, 240);" (click)="download()">Download</button>
         </div>
         
           

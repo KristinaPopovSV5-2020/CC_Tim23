@@ -19,7 +19,7 @@ export class AuthService {
     userState$ = this.user$.asObservable();
   
     constructor(private http: HttpClient) {
-      this.user$.next(null);
+      this.user$.next(this.getUsername());
     }
   
     login(auth: any): Observable<any> {
@@ -56,25 +56,18 @@ export class AuthService {
     return false;
   }
 
-  getRole(): string | null{
-    if (this.isLoggedIn()) {
-      const accessToken: string = localStorage.getItem('user') || '';
-      const helper = new JwtHelperService();
-      const role = helper.decodeToken(accessToken).role[0].name;
-      return role;
-    }
-    return null;
-  }
-
 
   setUser(): void {
     if (this.isLoggedIn()) {
       const accessToken: string = localStorage.getItem('user') || '';
       const helper = new JwtHelperService();
-      const role = helper.decodeToken(accessToken).role[0].name;
-      this.user$.next(role);
+      const sub = helper.decodeToken(accessToken).sub;
+      this.user$.next(sub);
     }
-    
+    else {
+      this.user$.next(null);
+    }
+  
   }
 
   

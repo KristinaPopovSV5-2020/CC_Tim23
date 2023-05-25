@@ -146,7 +146,7 @@ export class GalleryPhotoComponent implements OnInit {
 
 
   openDialog(folder: any): void {
-    const f = this.authService.getUsername() + "/" + folder;
+    const f = this.path + folder;
     this.dialog.open(UpdateFolderComponent, {
       data: f
     });

@@ -24,7 +24,11 @@ export class UpdateFolderComponent {
 
     d.afterClosed().subscribe(result => {
       if (result) {
-        //api da obrise 
+        this.galleryService.deleteAlbum(this.data.replaceAll("/", ",")).subscribe({
+          next:(res)=>{
+            console.log(res)
+          }
+        })
       }
     });
 

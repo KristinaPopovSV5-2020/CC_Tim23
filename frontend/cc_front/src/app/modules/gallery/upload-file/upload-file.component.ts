@@ -1,9 +1,10 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Content, GalleryService, UploadFile } from '../gallery.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-upload-file',
@@ -23,6 +24,7 @@ export class UploadFileComponent  implements OnInit{
     public dialogRef: MatDialogRef<UploadFileComponent>,
     private galleryService: GalleryService,
     private dialog: MatDialog,
+    private auth: AuthService,
     @Inject(MAT_DIALOG_DATA) public dialogData: { value: string }){
     }
     
@@ -30,7 +32,7 @@ export class UploadFileComponent  implements OnInit{
     this.UploadForm = this.formBuilder.group({
       filename:['',
           [
-            Validators.required,
+            Validators.required, this.hasSpecialCharacter,
           ],
       ],
       description:['',[]],
@@ -92,12 +94,8 @@ export class UploadFileComponent  implements OnInit{
           })
         },
         error:(err)=> {
-          if (err.code = 400) {
-            const dialogRef = this.dialog.open(ErrorDialogComponent, {
-              data : {
-                dialogMessage: "Choose a filename that is unique."
-              }
-            })
+          if (err.status == 400) {
+            alert("Choose a unique filename");
           }
         }
       })
@@ -125,9 +123,18 @@ export class UploadFileComponent  implements OnInit{
 
   parseFilename(): string | Blob {
     const fileParts = this.selectedFile?.name.split('.');
-    return "markic/" + this.UploadForm.value.filename + "." + fileParts![fileParts!.length - 1];
+    return this.auth.getUsername() + "/" + this.UploadForm.value.filename + "." + fileParts![fileParts!.length - 1];
   }
 
+  hasSpecialCharacter(control: FormControl) {
+    const regex = /[\\/.,_]/;
+
+    if (regex.test(control.value)) {
+      return { specialCharacter: true };
+    }
+    return null
+
+  }
 }
 
 

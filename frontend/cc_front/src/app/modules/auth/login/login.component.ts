@@ -34,7 +34,8 @@ export class LoginComponent {
       this.authService.login(loginVal).subscribe({
         next: (result) => {
           localStorage.setItem('user', JSON.stringify(result));
-          this.router.navigate(['/home']);
+          this.router.navigate(['/gallery']);
+          this.authService.setUser()
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {
