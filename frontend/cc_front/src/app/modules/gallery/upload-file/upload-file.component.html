@@ -11,6 +11,9 @@
             <mat-error *ngIf="UploadForm.get('filename')?.hasError('required')">
                 Filename is Required!
             </mat-error>
+            <mat-error *ngIf="UploadForm.get('filename')?.hasError('specialCharacter')">
+              Filename can't contain special characters
+            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill">
               <mat-label>Description</mat-label>

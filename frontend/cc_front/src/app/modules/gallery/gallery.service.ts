@@ -18,6 +18,10 @@ export class GalleryService {
     return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery/" + album,);
   }
 
+  deleteAlbum(album:string): Observable<any> {
+    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery/" + album,);
+  }
+
   uploadFile(file:FormData): Observable<any> {
     return this.http.post<FormData>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/upload",file);
   }
@@ -33,6 +37,10 @@ export class GalleryService {
 
   shareContent(content: any):Observable<any>{
     return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/share_content",content);
+  }
+
+  createAlbum(name: any):Observable<any>{
+    return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/create-album",{"name":name});
 
   }
 

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GalleryService } from '../gallery.service';
 import { Observable, filter, of } from 'rxjs';
@@ -43,9 +43,11 @@ export class UpdateContentComponent implements OnInit {
       this.dateModified = data.dateModified;
       this.type =data.fileType;
       this.size = data.fileSize;
+      if (this.data.tags != "")
+        this.tags = this.data.tags.split(",")
     }
-    tags: string[] = this.data.tags.split(",");
-  newTag: string = '';
+    tags: string[] = [];
+    newTag: string = '';
 
 
 
@@ -70,7 +72,7 @@ export class UpdateContentComponent implements OnInit {
       this.UpdateContentForm = this.formBuilder.group({
         filename:['',
             [
-              Validators.required,
+              Validators.required, this.hasSpecialCharacter
             ],
         ],
         description:['',
@@ -129,7 +131,7 @@ export class UpdateContentComponent implements OnInit {
     }
    
     shareContent(){
-      const d = this.dialog.open(ShareContentComponent, {data:this.filename});
+      const d = this.dialog.open(ShareContentComponent, {data:this.data.filename});
   
     }
 
@@ -159,6 +161,16 @@ openSubfolderDialog(){
           })
         }
       });
+    }
+
+    hasSpecialCharacter(control: FormControl) {
+      const regex = /[\\/.,_]/;
+  
+      if (regex.test(control.value)) {
+        return { specialCharacter: true };
+      }
+      return null
+  
     }
 
     

@@ -10,20 +10,15 @@ export class ToolbarComponent implements OnInit {
 
   @Input()
   color!: string;
-  role: any;
-  logged:boolean = false;
+  logged:any;
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.userState$.subscribe((result) => {
-      this.isLogged();
+      this.logged=result;
+      console.log(result)
     });
   }
 
-  isLogged():void{
-    this.logged= this.authService.isLoggedIn();
-  }
-
-  
 
 }
