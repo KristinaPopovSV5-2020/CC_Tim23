@@ -1,0 +1,230 @@
+service: PhotoAlbumProject
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.10
+  stage: prod
+  region: eu-north-1
+  memorySize: 128
+  timeout: 10
+  environment:
+    CONTENT_TABLE_NAME:
+      Ref: content_table
+    SHARE_TABLE_NAME:
+      Ref: share_table
+    RESOURCES_BUCKET_NAME:
+      Ref: user-photo-albums
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "Fn::GetAtt": [ content_table, Arn ]
+        - "Fn::GetAtt": [ share_table, Arn ]
+        - "Fn::GetAtt": [ user-photo-albums, Arn ]
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:ListBucket
+        - s3:DeleteObject
+      Resource:
+        - "arn:aws:s3:::user-photo-albums"
+        - "arn:aws:s3:::user-photo-albums/*"
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - "arn:aws:lambda:eu-north-1:*:function:PhotoAlbumProject-prod-authorizer"
+
+package:
+  individually: true
+  patterns:
+    - '!**/**'
+
+
+
+functions:
+  createAlbum:
+    handler: createAlbum/create_album.create
+    package:
+      patterns:
+        - 'create/**'
+    events:
+      - http:
+          path: create-album
+          method: post
+          cors: true
+  deleteAlbum:
+    handler: deleteAlbum/delete_album.delete
+    package:
+      patterns:
+        - 'deleteAlbum/**'
+    events:
+      - http:
+          path: gallery
+          method: delete
+          cors: true
+
+    deleteFile:
+      handler: deleteFile/delete_file.delete
+      package:
+        patterns:
+          - 'deleteFile/**'
+      events:
+        - http:
+            path: delete
+            method: delete
+            cors: true
+
+    deleteSharedContent:
+      handler: deleteSharedContent/delete_shared_content.delete
+      package:
+        patterns:
+          - 'deleteSharedContent/**'
+      events:
+        - http:
+            path: share_content
+            method: delete
+            cors: true
+
+  getSharedContent:
+    handler: getSharedContent/get_shared_content.get
+    package:
+      patterns:
+        - 'getSharedContent/**'
+    events:
+      - http:
+          path: shared
+          method: get
+          cors: true
+
+  getSharedGallery:
+    handler: getSharedGallery/get_shared_gallery.get
+    package:
+      patterns:
+        - 'getSharedGallery/**'
+    events:
+      - http:
+          path: shared_content
+          method: get
+          cors: true
+
+  getSubfolders:
+    handler: getSubfolders/get_subfolders
+    package:
+      patterns:
+        - 'getSubfolders/**'
+    events:
+      - http:
+          path: subfolders
+          method: get
+          cors: true
+
+
+  loginUser:
+    handler: loginUser/login_user
+    package:
+      patterns:
+        - 'loginUser/**'
+    events:
+      - http:
+          path: login_user
+          method: post
+          cors: true
+
+  moveFile:
+    handler: moveFile/move_file
+    package:
+      patterns:
+        - 'moveFile/**'
+    events:
+      - http:
+          path: move
+          method: put
+          cors: true
+
+  registerUser:
+    handler: registerUser/register_user
+    package:
+      patterns:
+        - 'registerUser/**'
+    events:
+      - http:
+          path: register_user
+          method: post
+          cors: true
+
+  shareContent:
+    handler: shareContent/share_content
+    package:
+      patterns:
+        - 'shareContent/**'
+    events:
+      - http:
+          path: share_content
+          method: post
+          cors: true
+
+  updateFile:
+    handler: updateFile/update_file
+    package:
+      patterns:
+        - 'updateFile/**'
+    events:
+      - http:
+          path: update
+          method: put
+          cors: true
+
+  uploadFiles:
+    handler: uploadFiles/upload_files
+    package:
+      patterns:
+        - 'uploadFiles/**'
+    events:
+      - http:
+          path: upload
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: user-photo-albums
+
+    ContentTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: content_table
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+
+
+    ShareTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: share_table
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+
+
+
+
