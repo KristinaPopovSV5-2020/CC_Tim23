@@ -5,7 +5,6 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-from requests import get
 
 # Extract environment variable
 
@@ -17,6 +16,10 @@ table_name = os.environ['CONTENT_TABLE_NAME']
 
 def create(event, context):
     folder_path = json.loads(event['body'])['name'] + '/'
+    return {
+        'statusCode': 200,
+        'body': str(folder_path)
+    }
 
     if not is_filename_unique(bucket_name, folder_path):
         return {

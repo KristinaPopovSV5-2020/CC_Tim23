@@ -10,58 +10,60 @@ export class GalleryService {
   constructor(private http: HttpClient) {
   }
 
+  url="https://zlnsd2j0h5.execute-api.eu-north-1.amazonaws.com/prod";
+
   loadGallery(): Observable<any> {
-    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery",);
+    return this.http.get(this.url+"/gallery",);
   }
 
   loadAlbum(album:string): Observable<any> {
-    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery/" + album,);
+    return this.http.get(this.url+"/gallery/" + album,);
   }
 
   deleteAlbum(album:string): Observable<any> {
-    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/gallery/" + album,);
+    return this.http.delete(this.url+"/gallery/" + album,);
   }
 
   uploadFile(file:FormData): Observable<any> {
-    return this.http.post<FormData>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/upload",file);
+    return this.http.post<FormData>(this.url+"/upload",file);
   }
 
   updateFile(id:string,file:any):Observable<any>{
-    return this.http.put("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/update/"+id,file);
+    return this.http.put(this.url+"/update/"+id,file);
   }
 
   deleteFile(id:string):Observable<any>{
-    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/delete/"+id);
+    return this.http.delete(this.url+"/delete/"+id);
   }
 
 
   shareContent(content: any):Observable<any>{
-    return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/share_content",content);
+    return this.http.post<any>(this.url+"/share_content",content);
   }
 
   createAlbum(name: any):Observable<any>{
-    return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/create-album",{"name":name});
+    return this.http.post<any>(this.url+"/create-album",{"name":name});
 
   }
 
   deleteSharedContent(id:string):Observable<any>{
-    return this.http.delete("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/share_content/"+id);
+    return this.http.delete(this.url+"/share_content/"+id);
   }
 
   getSharedContent(folder:string): Observable<any> {
-    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/shared/" + folder);
+    return this.http.get(this.url+"/shared/" + folder);
   }
   
   moveFile(data:any):Observable<any>{
-    return this.http.put("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/move/",data);
+    return this.http.put(this.url+"/move",data);
   }
 
   getSubfolders():Observable<any>{
-    return this.http.get("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/subfolders/markic");
+    return this.http.get(this.url+"/subfolders/markic");
   }
 
   getSharedGallery():Observable<any>{
-    return this.http.get(" https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/shared_gallery");
+    return this.http.get(this.url+"/shared_gallery");
   }
 
 

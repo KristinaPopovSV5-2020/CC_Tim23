@@ -3,15 +3,17 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
 
-const table_name = process.env.CONTENT_TABLE_NAME;
-cont bucketName = process.env.RESOURCES_BUCKET_NAME
+
 
 exports.handler = async (event, context) =>  {
 
+    const table_name = process.env.CONTENT_TABLE_NAME;;
+    const bucketName = process.env.RESOURCES_BUCKET_NAME;;
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = JSON.parse(event.body);
-    const username=event.requestContext.authorizer.claims['cognito:username'];
+    const username="markic";
+    //const username=event.requestContext.authorizer.claims['cognito:username'];
     const contentId=formData.id;
 
     const getParams = {

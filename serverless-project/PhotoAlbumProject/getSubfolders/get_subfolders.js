@@ -5,20 +5,18 @@ const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 const table_name = process.env.CONTENT_TABLE_NAME;
+const username="markic"; //ovo treba promeniti
 
 exports.handler = async (event, context) =>  {
 
 
 try {
 
-    const username="markic"; //ovo treba promeniti
 
 
-    const filenames = await getDistinctFilenames(tableName);
-    console.log('Distinct Filenames:', filenames);
 
-    // Continue with your logic using the filenames
-    // ...
+    const filenames = await getDistinctFilenames(table_name);
+
 
     return {
       statusCode: 200,

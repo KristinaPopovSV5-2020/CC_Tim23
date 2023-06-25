@@ -4,7 +4,7 @@ const s3 = new AWS.S3();
 
 exports.handler = async (event, context) =>  {
 
-
+    return { statusCode: 200,body: JSON.stringify(event.body) }
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = JSON.parse(event.body);
     //const username=event.requestContext.authorizer.claims.username;

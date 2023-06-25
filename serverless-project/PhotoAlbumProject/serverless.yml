@@ -35,13 +35,21 @@ provider:
         - "Fn::GetAtt": [ S3Bucket, Arn ]
     - Effect: Allow
       Action:
+        - dynamodb:Query
+      Resource:
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ ContentTable, Arn ]
+              - '/index/username-index'
+    - Effect: Allow
+      Action:
         - s3:GetObject
         - s3:PutObject
         - s3:ListBucket
         - s3:DeleteObject
       Resource:
-        - "arn:aws:s3:::user-photo-albums"
-        - "arn:aws:s3:::user-photo-albums/*"
+        - "arn:aws:s3:::user-photo-albums2"
+        - "arn:aws:s3:::user-photo-albums2/*"
 
 
 package:
@@ -74,7 +82,7 @@ functions:
         - 'deleteAlbum/**'
     events:
       - http:
-          path: gallery
+          path: gallery/{album}
           method: delete
           cors: true
           authorizer:
@@ -90,7 +98,7 @@ functions:
         - 'deleteFile/**'
     events:
       - http:
-          path: delete
+          path: delete/{id}
           method: delete
           cors: true
           authorizer:
@@ -106,7 +114,7 @@ functions:
         - 'deleteSharedContent/**'
     events:
       - http:
-          path: share_content
+          path: share_content/{id}
           method: delete
           cors: true
           authorizer:
@@ -122,7 +130,7 @@ functions:
         - 'getSharedContent/**'
     events:
       - http:
-          path: shared
+          path: shared/{folder}
           method: get
           cors: true
           authorizer:
@@ -147,15 +155,31 @@ functions:
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
 
+  getAlbumContent:
+    handler: getAlbumContent/get_album_content.get
+    package:
+      patterns:
+        - 'getAlbumContent/**'
+    events:
+      - http:
+          path: gallery/{album}
+          method: get
+          cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
+
   getSubfolders:
-    handler: getSubfolders/get_subfolders
+    handler: getSubfolders/get_subfolders.handler
     runtime: nodejs14.x
     package:
       patterns:
         - 'getSubfolders/**'
     events:
       - http:
-          path: subfolders
+          path: subfolders/{folder}
           method: get
           cors: true
           authorizer:
@@ -178,7 +202,7 @@ functions:
           cors: true
 
   moveFile:
-    handler: moveFile/move_file
+    handler: moveFile/move_file.handler
     runtime: nodejs14.x
     package:
       patterns:
@@ -207,7 +231,7 @@ functions:
           cors: true
 
   shareContent:
-    handler: shareContent/share_content
+    handler: shareContent/share_content.share
     package:
       patterns:
         - 'shareContent/**'
@@ -223,14 +247,14 @@ functions:
             type: COGNITO_USER_POOLS
 
   updateFile:
-    handler: updateFile/update_file
+    handler: updateFile/update_file.handler
     runtime: nodejs14.x
     package:
       patterns:
         - 'updateFile/**'
     events:
       - http:
-          path: update
+          path: update/{id}
           method: put
           cors: true
           authorizer:
@@ -240,7 +264,7 @@ functions:
             type: COGNITO_USER_POOLS
 
   uploadFiles:
-    handler: uploadFiles/upload_files
+    handler: uploadFiles/upload_files.upload
     package:
       patterns:
         - 'uploadFiles/**'

@@ -13,7 +13,7 @@ from io import BytesIO
 bucket_name = os.environ['RESOURCES_BUCKET_NAME']
 
 dynamodb = boto3.client('dynamodb')
-table_name = os.environ['SHARE_TABLE_NAME']
+table_name = os.environ['CONTENT_TABLE_NAME']
 
 
 def upload(event, context):
