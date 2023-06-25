@@ -1,9 +1,11 @@
 import json
 import boto3
+import os
 
 cognito = boto3.client('cognito-idp', 'eu-north-1')
-
-
+dynamodb = boto3.client('dynamodb')
+bucket_name = os.environ['RESOURCES_BUCKET_NAME']
+table_name = os.environ['SHARE_TABLE_NAME']
 def get(event, context):
     username = "markic"
     if 'requestContext' in event and 'authorizer' in event['requestContext']:
@@ -13,8 +15,6 @@ def get(event, context):
     path = path_params.get('folder')
     path = path.replace(',', '/')
 
-    dynamodb = boto3.client('dynamodb')
-    table_name = "share_table"
     query_params = {
         'TableName': table_name,
         'IndexName': 'username-index',

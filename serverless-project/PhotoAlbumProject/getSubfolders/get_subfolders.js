@@ -1,16 +1,20 @@
+
+
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const username="markic";
+
+const table_name = process.env.CONTENT_TABLE_NAME;
 
 exports.handler = async (event, context) =>  {
 
 
 try {
-    const tableName = 'content_table';
-    const id = 'id';
 
-    const filenames = await getDistinctFilenames(tableName, id);
+    const username="markic"; //ovo treba promeniti
+
+
+    const filenames = await getDistinctFilenames(tableName);
     console.log('Distinct Filenames:', filenames);
 
     // Continue with your logic using the filenames
@@ -29,9 +33,9 @@ try {
   }
 };
 
-async function getDistinctFilenames(tableName, id) {
+async function getDistinctFilenames(tableName) {
   const params = {
-    TableName: "content_table",
+    TableName: table_name,
     IndexName:"username-index",
     KeyConditionExpression: 'username = :username',
     ExpressionAttributeValues: {

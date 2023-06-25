@@ -2,6 +2,10 @@
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
+
+const table_name = process.env.CONTENT_TABLE_NAME;
+cont bucketName = process.env.RESOURCES_BUCKET_NAME
+
 exports.handler = async (event, context) =>  {
 
 
@@ -11,7 +15,7 @@ exports.handler = async (event, context) =>  {
     const contentId=formData.id;
 
     const getParams = {
-    TableName: 'content_table',
+    TableName: table_name,
     Key:{ id: contentId }
   };
 
@@ -27,7 +31,6 @@ exports.handler = async (event, context) =>  {
     const formattedDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'short' }).format(currentDate);
     const last = Item.filename.lastIndexOf('/');
     const data=Item.filename.split('/')
-    const bucketName="user-photo-albums"
 
     try {
       await s3.headObject({ Bucket: bucketName, Key: formData.album+data[data.length-1]}).promise();
@@ -54,7 +57,7 @@ exports.handler = async (event, context) =>  {
     const response2=await s3.deleteObject(deleteObjectParams).promise();
 
     const updateParams = {
-      TableName: 'content_table',
+      TableName: table_name,
         Key:{ id: contentId },
       UpdateExpression: 'set dateModified = :dateModified, filename=:filename',
       ExpressionAttributeValues: {

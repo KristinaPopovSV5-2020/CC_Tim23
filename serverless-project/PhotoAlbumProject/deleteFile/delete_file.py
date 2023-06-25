@@ -1,8 +1,11 @@
 import json
 import boto3
 import base64
+import os
 from datetime import datetime
 
+
+table_name = os.environ['CONTENT_TABLE_NAME']
 
 def delete(event, context):
     s3 = boto3.client('s3')

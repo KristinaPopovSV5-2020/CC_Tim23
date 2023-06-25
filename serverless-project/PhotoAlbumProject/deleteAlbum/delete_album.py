@@ -1,9 +1,11 @@
 import json
 import boto3
+import os
 
+bucket_name = os.environ['RESOURCES_BUCKET_NAME']
+table_name = os.environ['CONTENT_TABLE_NAME']
 
 def delete(event, context):
-    bucket_name = 'user-photo-albums'
     path_params = event.get('pathParameters', {})
     variable_value = path_params.get('album')
     folder_path = variable_value.replace(',', '/')
@@ -33,7 +35,7 @@ def delete(event, context):
 
     dynamodb = boto3.client('dynamodb')
     query_params = {
-        'TableName': 'content_table',
+        'TableName': table_name,
         'IndexName': 'username-index',
         'KeyConditionExpression': 'username = :username',
         'ExpressionAttributeValues': {
@@ -48,7 +50,6 @@ def delete(event, context):
         filename = item['filename']['S']
         if filename.startswith(folder_path):
             item_id = item['id']['S']
-            table_name = "content_table"
 
             try:
                 response = dynamodb.delete_item(

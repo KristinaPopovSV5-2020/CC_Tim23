@@ -7,15 +7,18 @@ provider:
   runtime: python3.10
   stage: prod
   region: eu-north-1
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
   memorySize: 128
   timeout: 10
   environment:
     CONTENT_TABLE_NAME:
-      Ref: content_table
+      Ref: ContentTable
     SHARE_TABLE_NAME:
-      Ref: share_table
+      Ref: ShareTable
     RESOURCES_BUCKET_NAME:
-      Ref: user-photo-albums
+      Ref: S3Bucket
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -27,9 +30,9 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - "Fn::GetAtt": [ content_table, Arn ]
-        - "Fn::GetAtt": [ share_table, Arn ]
-        - "Fn::GetAtt": [ user-photo-albums, Arn ]
+        - "Fn::GetAtt": [ ContentTable, Arn ]
+        - "Fn::GetAtt": [ ShareTable, Arn ]
+        - "Fn::GetAtt": [ S3Bucket, Arn ]
     - Effect: Allow
       Action:
         - s3:GetObject
@@ -39,11 +42,7 @@ provider:
       Resource:
         - "arn:aws:s3:::user-photo-albums"
         - "arn:aws:s3:::user-photo-albums/*"
-    - Effect: Allow
-      Action:
-        - lambda:InvokeFunction
-      Resource:
-        - "arn:aws:lambda:eu-north-1:*:function:PhotoAlbumProject-prod-authorizer"
+
 
 package:
   individually: true
@@ -57,12 +56,17 @@ functions:
     handler: createAlbum/create_album.create
     package:
       patterns:
-        - 'create/**'
+        - 'createAlbum/**'
     events:
       - http:
           path: create-album
           method: post
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
   deleteAlbum:
     handler: deleteAlbum/delete_album.delete
     package:
@@ -73,28 +77,43 @@ functions:
           path: gallery
           method: delete
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
-    deleteFile:
-      handler: deleteFile/delete_file.delete
-      package:
-        patterns:
-          - 'deleteFile/**'
-      events:
-        - http:
-            path: delete
-            method: delete
-            cors: true
+  deleteFile:
+    handler: deleteFile/delete_file.delete
+    package:
+      patterns:
+        - 'deleteFile/**'
+    events:
+      - http:
+          path: delete
+          method: delete
+          cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
-    deleteSharedContent:
-      handler: deleteSharedContent/delete_shared_content.delete
-      package:
-        patterns:
-          - 'deleteSharedContent/**'
-      events:
-        - http:
-            path: share_content
-            method: delete
-            cors: true
+  deleteSharedContent:
+    handler: deleteSharedContent/delete_shared_content.delete
+    package:
+      patterns:
+        - 'deleteSharedContent/**'
+    events:
+      - http:
+          path: share_content
+          method: delete
+          cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   getSharedContent:
     handler: getSharedContent/get_shared_content.get
@@ -106,6 +125,11 @@ functions:
           path: shared
           method: get
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   getSharedGallery:
     handler: getSharedGallery/get_shared_gallery.get
@@ -117,9 +141,15 @@ functions:
           path: shared_content
           method: get
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   getSubfolders:
     handler: getSubfolders/get_subfolders
+    runtime: nodejs14.x
     package:
       patterns:
         - 'getSubfolders/**'
@@ -128,10 +158,16 @@ functions:
           path: subfolders
           method: get
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
 
   loginUser:
     handler: loginUser/login_user
+    runtime: nodejs14.x
     package:
       patterns:
         - 'loginUser/**'
@@ -143,6 +179,7 @@ functions:
 
   moveFile:
     handler: moveFile/move_file
+    runtime: nodejs14.x
     package:
       patterns:
         - 'moveFile/**'
@@ -151,9 +188,15 @@ functions:
           path: move
           method: put
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   registerUser:
     handler: registerUser/register_user
+    runtime: nodejs14.x
     package:
       patterns:
         - 'registerUser/**'
@@ -173,9 +216,15 @@ functions:
           path: share_content
           method: post
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   updateFile:
     handler: updateFile/update_file
+    runtime: nodejs14.x
     package:
       patterns:
         - 'updateFile/**'
@@ -184,6 +233,11 @@ functions:
           path: update
           method: put
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
   uploadFiles:
     handler: uploadFiles/upload_files
@@ -195,34 +249,111 @@ functions:
           path: upload
           method: post
           cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
 
 resources:
   Resources:
     S3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: user-photo-albums
+        BucketName: user-photo-albums2
 
     ContentTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: content_table
+        TableName: content_table2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: filename
+            AttributeType: S
+          - AttributeName: album
+            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: username-index
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: filename-index
+            KeySchema:
+                - AttributeName: filename
+                  KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: album-index
+            KeySchema:
+                - AttributeName: album
+                  KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
 
 
+
     ShareTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: share_table
+        TableName: share_table2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: sharedWith
+            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: username-index
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: sharedWith-index
+            KeySchema:
+              - AttributeName: sharedWith
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+
+
+
+
 
 
 

@@ -2,15 +2,17 @@ import json
 import boto3
 import base64
 from datetime import datetime
+import os
 
+dynamodb = boto3.client('dynamodb')
+table_name = os.environ['SHARE_TABLE_NAME']
 
 def get(event, context):
     username = "kika"
     if 'requestContext' in event and 'authorizer' in event['requestContext']:
         username = event['requestContext']['authorizer']['claims']['cognito:username']
 
-    dynamodb = boto3.client('dynamodb')
-    table_name = "share_table"
+
     query_params = {
         'TableName': table_name,
         'IndexName': 'sharedWith-index',

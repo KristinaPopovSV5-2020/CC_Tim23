@@ -3,9 +3,10 @@ import boto3
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+const table = process.env.CONTENT_TABLE_NAME;
+
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('content_table')
     user_table=dynamodb.Table('users_table')
 
     sqs = boto3.resource('sqs')

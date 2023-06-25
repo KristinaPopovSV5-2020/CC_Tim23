@@ -2,6 +2,7 @@ import boto3
 import uuid
 import json
 import base64
+import os
 from datetime import datetime
 from botocore.exceptions import ClientError
 
@@ -9,7 +10,10 @@ s3_client = boto3.client('s3')
 from cgi import parse_multipart, parse_header
 from io import BytesIO
 
-bucket_name = 'user-photo-albums'
+bucket_name = os.environ['RESOURCES_BUCKET_NAME']
+
+dynamodb = boto3.client('dynamodb')
+table_name = os.environ['SHARE_TABLE_NAME']
 
 
 def upload(event, context):
@@ -59,15 +63,13 @@ def upload(event, context):
         }
 
     try:
-        response = s3_client.put_object(Body=body.get('file', [None])[0], Bucket=bucket_name, Key=file_name)
+        response = s3_client.put_object(Body=body.get('file', [None])[0], Bucket=bucket_name, Key=file_name,
+                                        ContentType=str(body.get('type', [None])[0]))
     except Exception as e:
         return {
             'statusCode': 400,
             'body': "Bad request"
         }
-
-    dynamodb = boto3.client('dynamodb')
-    table_name = "content_table"
 
     current_date = datetime.now()
     date_string = current_date.strftime('%d/%m/%Y')

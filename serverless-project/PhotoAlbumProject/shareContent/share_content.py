@@ -1,9 +1,14 @@
 import json
 import boto3
 import uuid
+import os
 
 cognito = boto3.client('cognito-idp', 'eu-north-1')
 
+
+
+dynamodb = boto3.client('dynamodb')
+table_name = os.environ['SHARE_TABLE_NAME']
 
 def share(event, context):
     username = "markic"
@@ -26,8 +31,6 @@ def share(event, context):
             'body': "NotFoundException"
         }
 
-    dynamodb = boto3.client('dynamodb')
-    table_name = "share_table"
     query_params = {
         'TableName': table_name,
         'IndexName': 'username-index',

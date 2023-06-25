@@ -11,10 +11,11 @@ from requests import get
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
+bucket_name = os.environ['RESOURCES_BUCKET_NAME']
+table_name = os.environ['CONTENT_TABLE_NAME']
 
 
 def create(event, context):
-    bucket_name = 'user-photo-albums'
     folder_path = json.loads(event['body'])['name'] + '/'
 
     if not is_filename_unique(bucket_name, folder_path):
@@ -38,8 +39,6 @@ def create(event, context):
     if 'requestContext' in event and 'authorizer' in event['requestContext']:
         username = event['requestContext']['authorizer']['claims']['cognito:username']
 
-
-    table_name = "content_table"
     try:
         response = dynamodb.put_item(
             TableName=table_name,
