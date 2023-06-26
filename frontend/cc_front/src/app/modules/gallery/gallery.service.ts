@@ -10,7 +10,7 @@ export class GalleryService {
   constructor(private http: HttpClient) {
   }
 
-  url="https://zlnsd2j0h5.execute-api.eu-north-1.amazonaws.com/prod";
+  url="https://de4qepe40m.execute-api.eu-north-1.amazonaws.com/prod";
 
   loadGallery(): Observable<any> {
     return this.http.get(this.url+"/gallery",);

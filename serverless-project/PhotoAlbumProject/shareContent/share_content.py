@@ -28,7 +28,7 @@ def share(event, context):
     except Exception as e:
         return {
             'statusCode': 404,
-            'body': "NotFoundException"
+            'body': str(response)
         }
 
     query_params = {

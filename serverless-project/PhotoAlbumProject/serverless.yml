@@ -7,9 +7,6 @@ provider:
   runtime: python3.10
   stage: prod
   region: eu-north-1
-  apiGateway:
-    binaryMediaTypes:
-      - "*/*"
   memorySize: 128
   timeout: 10
   environment:
@@ -35,11 +32,20 @@ provider:
         - "Fn::GetAtt": [ S3Bucket, Arn ]
     - Effect: Allow
       Action:
+        - cognito-idp:AdminGetUser
+        - cognito-idp:AdminInitiateAuth
+      Resource: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+    - Effect: Allow
+      Action:
         - dynamodb:Query
       Resource:
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [ ContentTable, Arn ]
+              - '/index/username-index'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ ShareTable, Arn ]
               - '/index/username-index'
     - Effect: Allow
       Action:
@@ -48,9 +54,8 @@ provider:
         - s3:ListBucket
         - s3:DeleteObject
       Resource:
-        - "arn:aws:s3:::user-photo-albums2"
-        - "arn:aws:s3:::user-photo-albums2/*"
-
+        - "arn:aws:s3:::user-photo-albums3"
+        - "arn:aws:s3:::user-photo-albums3/*"
 
 package:
   individually: true
@@ -94,7 +99,8 @@ functions:
             type: COGNITO_USER_POOLS
 
   deleteFile:
-    handler: deleteFile/delete_file.delete
+    handler: deleteFile/delete_file.handler
+    runtime: nodejs14.x
     package:
       patterns:
         - 'deleteFile/**'
@@ -198,7 +204,7 @@ functions:
 
 
   loginUser:
-    handler: loginUser/login_user
+    handler: loginUser/login_users.handler
     runtime: nodejs14.x
     package:
       patterns:
@@ -228,7 +234,7 @@ functions:
             type: COGNITO_USER_POOLS
 
   registerUser:
-    handler: registerUser/register_user
+    handler: registerUser/register_user.handler
     runtime: nodejs14.x
     package:
       patterns:
@@ -297,7 +303,7 @@ resources:
     S3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: user-photo-albums2
+        BucketName: user-photo-albums3
 
     ContentTable:
       Type: AWS::DynamoDB::Table

@@ -7,8 +7,8 @@ const s3 = new AWS.S3();
 
 exports.handler = async (event, context) =>  {
 
-    const table_name = process.env.CONTENT_TABLE_NAME;;
-    const bucketName = process.env.RESOURCES_BUCKET_NAME;;
+    const table_name = process.env.CONTENT_TABLE_NAME;
+    const bucketName = process.env.RESOURCES_BUCKET_NAME;
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = JSON.parse(event.body);

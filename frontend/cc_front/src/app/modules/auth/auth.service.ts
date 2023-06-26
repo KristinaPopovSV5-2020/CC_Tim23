@@ -17,18 +17,19 @@ export class AuthService {
     });
     user$ = new BehaviorSubject(null);
     userState$ = this.user$.asObservable();
+    url="https://de4qepe40m.execute-api.eu-north-1.amazonaws.com/prod"
   
     constructor(private http: HttpClient) {
     }
   
     login(auth: any): Observable<any> {
-      return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/login_user", auth, {
+      return this.http.post<any>(this.url+"/login_user", auth, {
         headers: this.headers,
       });
     }
 
     signUp(user: any): Observable<any> {
-      return this.http.post<any>("https://1f414q2rnh.execute-api.eu-north-1.amazonaws.com/prod/register_user", user, {
+      return this.http.post<any>(this.url+"/register_user", user, {
         headers: this.headers,
       });
     }

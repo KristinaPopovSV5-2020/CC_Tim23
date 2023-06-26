@@ -4,15 +4,17 @@ const s3 = new AWS.S3();
 
 exports.handler = async (event, context) =>  {
 
-    return { statusCode: 200,body: JSON.stringify(event.body) }
+    const table_name = process.env.CONTENT_TABLE_NAME;
+    const bucket_name = process.env.RESOURCES_BUCKET_NAME;
+
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = JSON.parse(event.body);
-    //const username=event.requestContext.authorizer.claims.username;
-    const username="markic";
+    const username=event.requestContext.authorizer.claims.username;
+    //const username="markic";
     const contentId=event.pathParameters.id;
 
     const getParams = {
-    TableName: 'content_table',
+    TableName: table_name,
     Key:{ id: contentId }
   };
 
@@ -23,12 +25,12 @@ exports.handler = async (event, context) =>  {
     }
     const currentDate=new Date();
     const formattedDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'short' }).format(currentDate);
-    const bucketName="user-photo-albums"
+
 
     if(Item.filename!=formData.fileName){
 
     try {
-      await s3.headObject({ Bucket: bucketName, Key: formData.fileName }).promise();
+      await s3.headObject({ Bucket: bucket_name, Key: formData.fileName }).promise();
       return { statusCode: 400, error: JSON.stringify("Name already exists.")}
     } catch (e) {
 
@@ -36,14 +38,14 @@ exports.handler = async (event, context) =>  {
 
     const currentObjectKey = Item.filename;
           const copyObjectParams = {
-      Bucket: bucketName,
-      CopySource: bucketName+"/"+currentObjectKey,
+      Bucket: bucket_name,
+      CopySource: bucket_name+"/"+currentObjectKey,
       Key: formData.fileName
     };
     const response1=await s3.copyObject(copyObjectParams).promise();
 
     const deleteObjectParams = {
-      Bucket: bucketName,
+      Bucket: bucket_name,
       Key: currentObjectKey
     };
     const response2=await s3.deleteObject(deleteObjectParams).promise();
@@ -51,7 +53,7 @@ exports.handler = async (event, context) =>  {
 
 
     const updateParams = {
-      TableName: 'content_table',
+      TableName: table_name,
         Key:{ id: contentId },
       UpdateExpression: 'set dateModified = :dateModified, filename=:filename, tags=:tags, description=:description',
       ExpressionAttributeValues: {
