@@ -4,6 +4,8 @@ import { LoginComponent } from 'src/app/modules/auth/login/login.component';
 import { SignupComponent } from 'src/app/modules/auth/signup/signup.component';
 import { GalleryPhotoComponent } from './modules/gallery/gallery-photo/gallery-photo.component';
 import { SharedGalleryComponent } from './modules/gallery/shared-gallery/shared-gallery.component';
+import { FamilyMemberComponent } from './modules/gallery/family-member/family-member.component';
+import { SignupMemberComponent } from './modules/auth/signup-member/signup-member.component';
 
 
 const routes: Routes = [
@@ -12,7 +14,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},
   {path: 'gallery', component: GalleryPhotoComponent},
-  {path: 'shared-gallery', component: SharedGalleryComponent}
+  {path: 'shared-gallery', component: SharedGalleryComponent},
+  {path:'family-member', component: FamilyMemberComponent},
+  {path: 'signup-member', component:SignupMemberComponent}
 ];
 
 @NgModule({

@@ -4,13 +4,15 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { MaterialModule } from 'src/infrastructure/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { SignupMemberComponent } from './signup-member/signup-member.component';
 
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    SignupMemberComponent
   ],
   imports: [
     CommonModule,
