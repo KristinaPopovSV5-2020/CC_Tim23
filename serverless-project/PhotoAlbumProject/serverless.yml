@@ -69,6 +69,7 @@ functions:
       - http:
           path: create-album
           method: post
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -84,6 +85,7 @@ functions:
       - http:
           path: gallery/{album}
           method: delete
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -100,6 +102,7 @@ functions:
       - http:
           path: delete/{id}
           method: delete
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -116,6 +119,7 @@ functions:
       - http:
           path: share_content/{id}
           method: delete
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -132,6 +136,7 @@ functions:
       - http:
           path: shared/{folder}
           method: get
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -148,6 +153,7 @@ functions:
       - http:
           path: shared_content
           method: get
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -164,6 +170,7 @@ functions:
       - http:
           path: gallery/{album}
           method: get
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -181,6 +188,7 @@ functions:
       - http:
           path: subfolders/{folder}
           method: get
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -211,6 +219,7 @@ functions:
       - http:
           path: move
           method: put
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -228,6 +237,7 @@ functions:
       - http:
           path: register_user
           method: post
+          integration: lambda-proxy
           cors: true
 
   shareContent:
@@ -239,6 +249,7 @@ functions:
       - http:
           path: share_content
           method: post
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -256,6 +267,7 @@ functions:
       - http:
           path: update/{id}
           method: put
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
@@ -272,6 +284,7 @@ functions:
       - http:
           path: upload
           method: post
+          integration: lambda-proxy
           cors: true
           authorizer:
             name: UserPoolAuth
