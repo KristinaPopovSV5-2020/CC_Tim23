@@ -20,7 +20,7 @@ def invite(event, context):
     <html>
     <body>
     <p>Click the following link to register:</p>
-    <a href="http://localhost:4200/signup-member">Registracija</a>
+    <a href="http://localhost:4200/signup-member">Registration</a>
     </body>
     </html>
     """
