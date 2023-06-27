@@ -38,6 +38,11 @@ provider:
         - "Fn::GetAtt": [ S3Bucket, Arn ]
     - Effect: Allow
       Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+    - Effect: Allow
+      Action:
         - cognito-idp:AdminGetUser
         - cognito-idp:AdminInitiateAuth
       Resource: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
@@ -218,8 +223,6 @@ functions:
             type: COGNITO_USER_POOLS
   inviteMemebr:
     handler: inviteMember/invite_member.invite
-    role:
-      Fn::GetAtt: [MyLambdaRole, Arn ]
     package:
       patterns:
         - 'inviteMember/**'
