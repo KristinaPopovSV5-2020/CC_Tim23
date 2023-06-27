@@ -17,6 +17,8 @@ provider:
       Ref: ContentTable
     SHARE_TABLE_NAME:
       Ref: ShareTable
+    MEMBER_TABLE_NAME:
+      Ref: MemberTable
     RESOURCES_BUCKET_NAME:
       Ref: S3Bucket
   iamRoleStatements:
@@ -32,6 +34,7 @@ provider:
       Resource:
         - "Fn::GetAtt": [ ContentTable, Arn ]
         - "Fn::GetAtt": [ ShareTable, Arn ]
+        - "Fn::GetAtt": [ MemberTable, Arn ]
         - "Fn::GetAtt": [ S3Bucket, Arn ]
     - Effect: Allow
       Action:
@@ -49,6 +52,10 @@ provider:
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [ ShareTable, Arn ]
+              - '/index/username-index'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ MemberTable, Arn ]
               - '/index/username-index'
     - Effect: Allow
       Action:
@@ -201,6 +208,24 @@ functions:
     events:
       - http:
           path: subfolders/{folder}
+          method: get
+          integration: lambda-proxy
+          cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
+  inviteMemebr:
+    handler: inviteMember/invite_member.invite
+    role:
+      Fn::GetAtt: [MyLambdaRole, Arn ]
+    package:
+      patterns:
+        - 'inviteMember/**'
+    events:
+      - http:
+          path: invite/{email}
           method: get
           integration: lambda-proxy
           cors: true
@@ -483,6 +508,35 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
+
+    MemberTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: member_table2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: username-index
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
     
     NotificationsQueue:
       Type: AWS::SQS::Queue
@@ -490,3 +544,4 @@ resources:
         QueueName: NotificationsQueue
         VisibilityTimeout: 300
         MaximumMessageSize: 262144
+

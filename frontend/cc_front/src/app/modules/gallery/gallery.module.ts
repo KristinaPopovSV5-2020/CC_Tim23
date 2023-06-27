@@ -11,6 +11,7 @@ import { ShareContentComponent } from './share-content/share-content.component';
 import { SharedGalleryComponent } from './shared-gallery/shared-gallery.component';
 import { ViewSharedContentComponent } from './view-shared-content/view-shared-content.component';
 import { ViewSharedFolderComponent } from './view-shared-folder/view-shared-folder.component';
+import { FamilyMemberComponent } from './family-member/family-member.component';
 
 
 
@@ -24,7 +25,8 @@ import { ViewSharedFolderComponent } from './view-shared-folder/view-shared-fold
     ShareContentComponent,
     SharedGalleryComponent,
     ViewSharedContentComponent,
-    ViewSharedFolderComponent
+    ViewSharedFolderComponent,
+    FamilyMemberComponent
   ],
   imports: [
     CommonModule,
