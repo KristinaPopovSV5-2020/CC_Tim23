@@ -29,7 +29,7 @@ export class GalleryService {
   }
 
   updateFile(id:string,file:any):Observable<any>{
-    return this.http.put(this.url+"/update/"+id,file);
+    return this.http.put(this.url+"/updateFile/"+id,file);
   }
 
   deleteFile(id:string):Observable<any>{
@@ -55,7 +55,7 @@ export class GalleryService {
   }
   
   moveFile(data:any):Observable<any>{
-    return this.http.put(this.url+"/move",data);
+    return this.http.put(this.url+"/moveFile/"+1,data);
   }
 
   getSubfolders():Observable<any>{

@@ -90,7 +90,7 @@ export class UpdateContentComponent implements OnInit {
       if (this.UpdateContentForm.valid){   
         console.log(this.filename);     
         let t =this.type.split('/')
-        this.galleryService.updateFile(this.data.id,{fileName:this.path+this.filename+"."+t[1],tags:this.tags,desc:this.description}).subscribe({
+        this.galleryService.updateFile(this.data.id,{fileName:this.path+this.filename+"."+t[1],tags:this.tags,desc:this.description,id:this.data.id}).subscribe({
           next:(result)=>{
             alert("File updated")
             
