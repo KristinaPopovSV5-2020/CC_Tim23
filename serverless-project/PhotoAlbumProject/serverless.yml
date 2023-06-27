@@ -210,13 +210,15 @@ functions:
             type: COGNITO_USER_POOLS
   inviteMemebr:
     handler: inviteMember/invite_member.invite
+    role:
+      Fn::GetAtt: [MyLambdaRole, Arn ]
     package:
       patterns:
         - 'inviteMember/**'
     events:
       - http:
           path: invite/{email}
-          method: post
+          method: get
           integration: lambda-proxy
           cors: true
           authorizer:
@@ -442,7 +444,6 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-
 
 
 

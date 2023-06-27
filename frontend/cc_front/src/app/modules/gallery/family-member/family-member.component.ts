@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../auth/auth.service';
+import { GalleryService } from '../gallery.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-family-member',
@@ -15,7 +17,7 @@ export class FamilyMemberComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private authService: AuthService){
+    private galleryService: GalleryService){
     }
 
 
@@ -34,7 +36,17 @@ export class FamilyMemberComponent implements OnInit {
 
 
     invite(): void{
-      
+      this.galleryService.inviteMember(this.emailForm.value.email).subscribe({
+        next: (result) => {
+          alert("Family member successfully invited!")
+        },
+        error: (error) => {
+          if (error instanceof HttpErrorResponse) {
+            alert("greska");
+          }
+        },
+      });
+
     }
 
 }

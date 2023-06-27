@@ -46,6 +46,11 @@ export class GalleryService {
 
   }
 
+  inviteMember(email: any):Observable<any>{
+    return this.http.get<any>(this.url+"/invite/" + email );
+
+  }
+
   deleteSharedContent(id:string):Observable<any>{
     return this.http.delete(this.url+"/share_content/"+id);
   }
