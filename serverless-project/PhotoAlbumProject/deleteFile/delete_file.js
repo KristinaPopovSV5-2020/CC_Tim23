@@ -7,7 +7,7 @@ const bucket_name = process.env.RESOURCES_BUCKET_NAME;
 exports.handler = async (event, context) =>  {
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
-    const username="markic";
+    const username="zorica";
     //const username=event.requestContext.authorizer.claims['cognito:username'];
     const contentId=event.pathParameters.id;
 
@@ -43,21 +43,21 @@ exports.handler = async (event, context) =>  {
 
     const response = await dynamodb.delete(deleteParams).promise();
 
-    /*const sqs = new AWS.SQS();
+    const sqs = new AWS.SQS();
     const message = {
     'username': username ,
     'item': contentId
 };
      const messageBody = JSON.stringify(message);
      const params = {
-        QueueUrl: 'NotificationQueue',
+        QueueUrl: 'https://sqs.eu-north-1.amazonaws.com/815307418428/NotificationQueue',
         MessageBody: messageBody
     };
 
-    sqs.sendMessage(params).promise()
+    await sqs.sendMessage(params).promise()
         .then(data => data.MessageId);
 
-*/
+
      return { statusCode: 200,body: JSON.stringify(response) }
    }catch(error){
        return { statusCode: 404, error: error.message}

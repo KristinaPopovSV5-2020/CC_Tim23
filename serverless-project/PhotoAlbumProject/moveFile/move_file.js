@@ -3,15 +3,15 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
 
+const table_name = process.env.CONTENT_TABLE_NAME;
+const bucketName = process.env.RESOURCES_BUCKET_NAME;
+
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 
-exports.handler = async (event, context) =>  {
+exports.handlerDynamoDB = async (event, context) =>  {
 
-    const table_name = process.env.CONTENT_TABLE_NAME;
-    const bucketName = process.env.RESOURCES_BUCKET_NAME;
-
-    const dynamodb = new AWS.DynamoDB.DocumentClient();
-    const formData = JSON.parse(event.body);
+    const formData = event;
     const username="markic";
     //const username=event.requestContext.authorizer.claims['cognito:username'];
     const contentId=formData.id;
@@ -34,30 +34,6 @@ exports.handler = async (event, context) =>  {
     const last = Item.filename.lastIndexOf('/');
     const data=Item.filename.split('/')
 
-    try {
-      await s3.headObject({ Bucket: bucketName, Key: formData.album+data[data.length-1]}).promise();
-      return { statusCode: 400, error: "Name already exists."}
-    } catch (e) {
-
-    }
-
-
-
-    const currentObjectKey = Item.filename;
-
-    const copyObjectParams = {
-      Bucket: bucketName,
-      CopySource: bucketName+"/"+currentObjectKey,
-      Key: formData.album+data[data.length-1]
-    };
-    const response1=await s3.copyObject(copyObjectParams).promise();
-
-    const deleteObjectParams = {
-      Bucket: bucketName,
-      Key: currentObjectKey
-    };
-    const response2=await s3.deleteObject(deleteObjectParams).promise();
-
     const updateParams = {
       TableName: table_name,
         Key:{ id: contentId },
@@ -69,9 +45,88 @@ exports.handler = async (event, context) =>  {
     };
 
      const response = await dynamodb.update(updateParams).promise();
-     return { statusCode: 200,body: JSON.stringify(response) }
+
+
+     return { filename: Item.filename,body: event }
    }catch(error){
        return { statusCode: 404, error: error.message}
    }
 };
 
+exports.handlerCopy = async (event, context) => {
+
+
+    const formData = event.body;
+    const data=event.filename.split('/')
+
+    try {
+      await s3.headObject({ Bucket: bucketName, Key: formData.album+data[data.length-1]}).promise();
+      return { statusCode: 400, error: "Name already exists."}
+    } catch (e) {
+
+    }
+
+     const currentObjectKey = event.filename;
+
+
+    const copyObjectParams = {
+      Bucket: bucketName,
+      CopySource: bucketName+"/"+currentObjectKey,
+      Key: formData.album+data[data.length-1]
+    };
+    const response1=await s3.copyObject(copyObjectParams).promise();
+
+    return { filename: event.filename,body: event.body }
+}
+
+exports.handlerDelete = async (event, context) =>  {
+
+    const formData = event.body;
+    const currentObjectKey = event.filename;
+
+     const deleteObjectParams = {
+      Bucket: bucketName,
+      Key: currentObjectKey
+    };
+    const response2=await s3.deleteObject(deleteObjectParams).promise();
+
+}
+
+exports.RollbackDelete = async (event, context) =>  {
+
+    const formData = event.body;
+    const currentObjectKey = event.filename;
+
+     const deleteObjectParams = {
+      Bucket: bucketName,
+      Key: currentObjectKey
+    };
+    const response2=await s3.deleteObject(deleteObjectParams).promise();
+
+}
+
+exports.RollbackMove = async (event, context) =>  {
+
+    const formData = event.body;
+    const currentObjectKey = event.filename;
+
+     const deleteObjectParams = {
+      Bucket: bucketName,
+      Key: currentObjectKey
+    };
+    const response2=await s3.deleteObject(deleteObjectParams).promise();
+
+}
+
+exports.RollbackDynamoDB = async (event, context) =>  {
+
+    const formData = event.body;
+    const currentObjectKey = event.filename;
+
+     const deleteObjectParams = {
+      Bucket: bucketName,
+      Key: currentObjectKey
+    };
+    const response2=await s3.deleteObject(deleteObjectParams).promise();
+
+}
