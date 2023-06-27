@@ -299,6 +299,17 @@ functions:
           method: post
           integration: lambda-proxy
           cors: true
+  registrationMember:
+    handler: registrationMember/registration_member.register
+    package:
+      patterns:
+        - 'registrationMember/**'
+    events:
+      - http:
+          path: register_member
+          method: post
+          integration: lambda-proxy
+          cors: true
 
   shareContent:
     handler: shareContent/share_content.share
