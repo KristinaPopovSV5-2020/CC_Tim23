@@ -11,7 +11,7 @@ exports.handler = async (event, context) =>  {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = event;
     //const username=event.requestContext.authorizer.claims.username;
-    const username="markic";
+    const username="zorica";
     const contentId=event.id;
 
     const getParams = {
@@ -24,8 +24,6 @@ exports.handler = async (event, context) =>  {
     if (!Item) {
      return { statusCode: 404, error: "Not found"}
     }
-
-
 
     if(Item.filename!==formData.fileName){
 
@@ -80,5 +78,18 @@ exports.handlerDynamoDB = async (event, context) => {
         };
 
      const response = await dynamodb.update(updateParams).promise();
+     const sqs = new AWS.SQS();
+     const message = {
+        'username': username ,
+        'item': contentId
+    };
+     const messageBody = JSON.stringify(message);
+     const params = {
+        QueueUrl: 'https://sqs.eu-north-1.amazonaws.com/815307418428/NotificationsQueue',
+        MessageBody: messageBody
+    };
+
+    await sqs.sendMessage(params).promise()
+        .then(data => data.MessageId);
      return { statusCode: 200,body: JSON.stringify(response) }
 };

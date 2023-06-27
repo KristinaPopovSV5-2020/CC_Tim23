@@ -50,7 +50,7 @@ exports.handler = async (event, context) =>  {
 };
      const messageBody = JSON.stringify(message);
      const params = {
-        QueueUrl: 'https://sqs.eu-north-1.amazonaws.com/815307418428/NotificationQueue',
+        QueueUrl: 'https://sqs.eu-north-1.amazonaws.com/815307418428/NotificationsQueue',
         MessageBody: messageBody
     };
 

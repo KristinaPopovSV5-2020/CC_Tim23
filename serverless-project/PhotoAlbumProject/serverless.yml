@@ -74,7 +74,7 @@ provider:
     - Effect: Allow
       Action:
         - sqs:SendMessage
-      Resource: arn:aws:sqs:eu-north-1:815307418428:NotificationQueue
+      Resource: arn:aws:sqs:eu-north-1:815307418428:NotificationsQueue
 
 package:
   individually: true

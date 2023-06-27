@@ -75,10 +75,11 @@ def upload(event, context):
     date_string = current_date.strftime('%d/%m/%Y')
 
     try:
+        contentId =  str(uuid.uuid4());
         response = dynamodb.put_item(
             TableName=table_name,
             Item={
-                "id": {"S": str(uuid.uuid4())},
+                "id": {"S": contentId},
                 "username": {"S": username},
                 "filename": {"S": file_name},
                 "fileType": {"S": str(body.get('type', [None])[0])},
@@ -89,9 +90,23 @@ def upload(event, context):
                 "tags": {"S": body.get('tags', [None])[0]}
             })
 
+        sqs = boto3.client('sqs')
+        message = {
+            'username': username,
+            'item': contentId
+        }
+        message_body = json.dumps(message)
+        params = {
+            'QueueUrl': 'https://sqs.eu-north-1.amazonaws.com/815307418428/NotificationsQueue',
+            'MessageBody': message_body
+        }
+
+        response = sqs.send_message(**params)
+        message_id = response['MessageId']
+
         return {
             'statusCode': 200,
-            'body': json.dumps(response)
+            'body': json.dumps(message_id)
         }
 
     except Exception as e:
