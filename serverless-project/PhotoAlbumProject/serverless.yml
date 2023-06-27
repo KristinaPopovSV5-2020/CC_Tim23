@@ -2,6 +2,9 @@ service: PhotoAlbumProject
 
 frameworkVersion: '3'
 
+plugins:
+  - serverless-step-functions
+
 provider:
   name: aws
   runtime: python3.10
@@ -68,6 +71,10 @@ provider:
       Resource:
         - "arn:aws:s3:::user-photo-albums3"
         - "arn:aws:s3:::user-photo-albums3/*"
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource: arn:aws:sqs:eu-north-1:815307418428:NotificationQueue
 
 package:
   individually: true
@@ -127,6 +134,7 @@ functions:
             arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
+            
 
   deleteSharedContent:
     handler: deleteSharedContent/delete_shared_content.delete
@@ -261,6 +269,24 @@ functions:
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
 
+  s3Copy:
+      handler: moveFile/move_file.handlerCopy
+      runtime: nodejs14.x
+      package:
+        patterns:
+          - 'moveFile/**'
+  s3Delete:
+    handler: moveFile/move_file.handlerDelete
+    runtime: nodejs14.x
+    package:
+      patterns:
+        - 'moveFile/**'
+  moveDynamoDB:
+    handler: moveFile/move_file.handlerDynamoDB
+    runtime: nodejs14.x
+    package:
+      patterns:
+        - 'moveFile/**'
   registerUser:
     handler: registerUser/register_user.handler
     runtime: nodejs14.x
@@ -309,6 +335,24 @@ functions:
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
 
+  updateFileDynamoDB:
+    handler: updateFile/update_file.handlerDynamoDB
+    runtime: nodejs14.x
+    package:
+      patterns:
+        - 'updateFile/**'
+    events:
+      - http:
+          path: updateDynamoDB/{id}
+          method: put
+          integration: lambda-proxy
+          cors: true
+          authorizer:
+            name: UserPoolAuth
+            arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+            identitySource: method.request.header.Authorization
+            type: COGNITO_USER_POOLS
+
   uploadFiles:
     handler: uploadFiles/upload_files.upload
     package:
@@ -325,6 +369,56 @@ functions:
             arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
+
+stepFunctions:
+  stateMachines:
+    firstStepFunction:
+      events:
+        - http:
+            path: updateFile/{id}
+            method: put
+            authorizer:
+              name: UserPoolAuth
+              arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+              identitySource: method.request.header.Authorization
+              type: COGNITO_USER_POOLS
+      definition:
+        StartAt: updateFile
+        States:
+          updateFile:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-updateFile"
+            Next: updateFileDynamoDB
+          updateFileDynamoDB:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-updateFileDynamoDB"
+            End: true
+    moveStepFunction:
+      events:
+        - http:
+            path: moveFile/{id}
+            method: put
+            authorizer:
+              name: UserPoolAuth
+              arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+              identitySource: method.request.header.Authorization
+              type: COGNITO_USER_POOLS
+      definition:
+        StartAt: moveDynamoDB
+        States:
+          moveDynamoDB:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-moveDynamoDB"
+            Next: s3Copy
+          s3Copy:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-s3Copy"
+            Next: s3Delete
+          s3Delete:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-s3Delete"
+            End: true
+
 
 resources:
   Resources:
@@ -381,9 +475,6 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-
-
-
     ShareTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -421,6 +512,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
+
     MemberTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -448,11 +540,11 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-
-
-
-
-
-
-
+    
+    NotificationsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: NotificationsQueue
+        VisibilityTimeout: 300
+        MaximumMessageSize: 262144
 
