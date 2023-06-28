@@ -5,6 +5,7 @@ import { SignupComponent } from './signup/signup.component';
 import { MaterialModule } from 'src/infrastructure/material.module';
 import { SharedModule } from '../shared/shared.module';
 import { SignupMemberComponent } from './signup-member/signup-member.component';
+import { VerifyMemberComponent } from './verify-member/verify-member.component';
 
 
 
@@ -12,7 +13,8 @@ import { SignupMemberComponent } from './signup-member/signup-member.component';
   declarations: [
     LoginComponent,
     SignupComponent,
-    SignupMemberComponent
+    SignupMemberComponent,
+    VerifyMemberComponent
   ],
   imports: [
     CommonModule,

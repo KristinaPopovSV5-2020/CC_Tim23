@@ -97,13 +97,14 @@ export class SignupMemberComponent implements OnInit{
     if(this.memberForm.valid){
       const dateToFormat = new Date(this.memberForm.value.birth);
       const formattedDate = `${dateToFormat.getFullYear()}/${(dateToFormat.getMonth() + 1).toString().padStart(2, '0')}/${dateToFormat.getDate().toString().padStart(2, '0')}`;
-      this.authService.signUp({
+      this.authService.signUpMember({
         name: this.memberForm.value.name,
         surname: this.memberForm.value.surname,
         email: this.memberForm.value.email,
         birth:formattedDate,
         password: this.memberForm.value.password,
-        username:this.memberForm.value.username
+        username:this.memberForm.value.username,
+        invitedUsername: this.memberForm.value.invitedUsername
       }).subscribe({
         next: (result) => {
           alert("Success!")

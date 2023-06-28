@@ -300,7 +300,8 @@ functions:
           integration: lambda-proxy
           cors: true
   registrationMember:
-    handler: registrationMember/registration_member.register
+    handler: registrationMember/registration_member.handler
+    runtime: nodejs14.x
     package:
       patterns:
         - 'registrationMember/**'
@@ -327,6 +328,17 @@ functions:
             arn: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
             identitySource: method.request.header.Authorization
             type: COGNITO_USER_POOLS
+  shareContentMember:
+    handler: shareContentMember/share_content_member.share
+    package:
+      patterns:
+        - 'shareContentMember/**'
+    events:
+      - http:
+          path: share_content_member
+          method: post
+          integration: lambda-proxy
+          cors: true
 
   updateFile:
     handler: updateFile/update_file.handler

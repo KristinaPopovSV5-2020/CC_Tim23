@@ -6,6 +6,7 @@ import { GalleryPhotoComponent } from './modules/gallery/gallery-photo/gallery-p
 import { SharedGalleryComponent } from './modules/gallery/shared-gallery/shared-gallery.component';
 import { FamilyMemberComponent } from './modules/gallery/family-member/family-member.component';
 import { SignupMemberComponent } from './modules/auth/signup-member/signup-member.component';
+import { VerifyMemberComponent } from './modules/auth/verify-member/verify-member.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path: 'gallery', component: GalleryPhotoComponent},
   {path: 'shared-gallery', component: SharedGalleryComponent},
   {path:'family-member', component: FamilyMemberComponent},
-  {path: 'signup-member', component:SignupMemberComponent}
+  {path: 'signup-member', component:SignupMemberComponent},
+  {path: 'verify-member', component: VerifyMemberComponent}
 ];
 
 @NgModule({

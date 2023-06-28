@@ -34,6 +34,18 @@ export class AuthService {
       });
     }
 
+    signUpMember(user: any): Observable<any> {
+      return this.http.post<any>(this.url+"/register_member", user, {
+        headers: this.headers,
+      });
+    }
+
+    verifyMember(user: any): Observable<any> {
+      return this.http.post<any>(this.url+"/share_content_member", user, {
+        headers: this.headers,
+      });
+    }
+
     logout(): Observable<string> {
       return this.http.get(environment.apiHost + 'api/logout', {
         responseType: 'text',

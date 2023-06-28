@@ -1,9 +1,7 @@
-const fs = require('fs');
-const html = fs.readFileSync('index.html', { encoding: 'utf8' });
-
 const AWS = require('aws-sdk');
 const cognito = new AWS.CognitoIdentityServiceProvider();
 const sesClient = new AWS.SES({ region: 'eu-north-1' });
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 const table_name = process.env.MEMBER_TABLE_NAME;
 
@@ -41,9 +39,10 @@ exports.handler = async (event, context) => {
   try {
     const data = await dynamodb.query(params).promise();
     const emails = data.Items.map(item => item.email);
-
     for (let e of emails) {
+
       if (e == email) {
+
         const poolData = {
           UserPoolId: 'eu-north-1_eXQUKF6d5',
           ClientId: '4nelltj3ilhar854vk16rjiim9',
@@ -117,36 +116,14 @@ exports.handler = async (event, context) => {
 
   const link = 'http://localhost:4200/verify-member/${encodeURIComponent(username)}/${encodeURIComponent(invitedUsername)}';
 
-        const body = `
-          <html>
-            <body>
-              <h1>Click on the following link to verify the invited family member:</h1>
-              <p>Click <a href="${link}">here</a></p>
-            </body>
-          </html>
-        `;
-         const params = {
-          Destination: {
-            ToAddresses: [invitedEmail]
-          },
-          Message: {
-            Body: {
-              Html: {
-                Data: body
-              }
-            },
-            Subject: {
-              Data: 'Verification of family member registration'
-            }
-          },
-          Source: email
-        };
+  const body = `
+    <html>
+      <body>
+        <h1>Click on the following link to verify the invited family member:</h1>
+        <p>Click <a href="${link}">here</a></p>
+      </body>
+    </html>
+  `;
 
-        sesClient.sendEmail(params, (err, data) => {
-          if (err) {
-            console.log('Error:', err);
-          } else {
-            console.log('Email sent:', data);
-          }
-        });
+
 };
