@@ -4,6 +4,7 @@ import os
 
 bucket_name = os.environ['RESOURCES_BUCKET_NAME']
 table_name = os.environ['CONTENT_TABLE_NAME']
+share_name = os.environ['SHARE_TABLE_NAME']
 
 def delete(event, context):
     path_params = event.get('pathParameters', {})
@@ -61,6 +62,34 @@ def delete(event, context):
                     'statusCode': 404,
                     'body': "NotFoundException"
                 }
+
+    query_params = {
+        'TableName': share_name,
+        'IndexName': 'username-index',
+        'KeyConditionExpression': 'username = :username',
+        'ExpressionAttributeValues': {
+            ':username': {'S': username},
+        },
+    }
+    response = dynamodb.query(**query_params)
+    items = response.get('Items', [])
+    for item in items:
+        filename = item['filepath']['S']
+        if filename.startswith(folder_path):
+            item_id = item['id']['S']
+
+            try:
+                response = dynamodb.delete_item(
+                    TableName=share_name,
+                    Key={"id": {"S": item_id}}
+                )
+            except Exception as e:
+                return {
+                    'statusCode': 404,
+                    'body': "NotFoundException"
+                }
+
+
     return {
         'statusCode': 200,
         'body': 'Success'

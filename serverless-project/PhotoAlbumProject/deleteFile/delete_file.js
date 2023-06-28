@@ -11,7 +11,6 @@ exports.handler = async (event, context) =>  {
     const username="markic";
     //const username=event.requestContext.authorizer.claims['cognito:username'];
     const contentId=event.pathParameters.id;
-    const share_table = dynamodb.Table(share_name)
 
     const getParams = {
     TableName: table_name,
@@ -45,12 +44,18 @@ exports.handler = async (event, context) =>  {
 
     const response = await dynamodb.delete(deleteParams).promise();
 
-     const response1 = share_table.query(
-        IndexName='filepath-index',
-        KeyConditionExpression='filepath = :filepath',
-        ExpressionAttributeValues={':filepath': Item.filepath}
-    )
-     for(let i of response1.Items){
+      const paramsFile = {
+    TableName: share_name,
+    IndexName:"filepath-index",
+    KeyConditionExpression: 'filepath = :filepath',
+    ExpressionAttributeValues: {
+      ':filepath': Item.filename,
+    },
+  };
+
+  try{
+  const data = await dynamodb.query(paramsFile).promise()
+  for(let i of data.Items){
           const deleteParams = {
           TableName: share_name,
           Key:{ id: i.id }
@@ -58,6 +63,9 @@ exports.handler = async (event, context) =>  {
 
         const response = await dynamodb.delete(deleteParams).promise();
      }
+  }catch(error){
+       return { statusCode: 404, error: error.message}
+   }
 
     const sqs = new AWS.SQS();
     const message = {

@@ -65,14 +65,18 @@ provider:
               - '/index/username-index'
         - Fn::Join:
             - ''
+            - - Fn::GetAtt: [ ShareTable, Arn ]
+              - '/index/filepath-index'
+        - Fn::Join:
+            - ''
             - - Fn::GetAtt: [ MemberTable, Arn ]
               - '/index/username-index'
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [ ShareTable, Arn ]
               - '/index/sharedWith-index'
-              - '/index/filepath-index'
     - Effect: Allow
+
       Action:
         - s3:GetObject
         - s3:PutObject
@@ -534,6 +538,8 @@ resources:
           - AttributeName: username
             AttributeType: S
           - AttributeName: sharedWith
+            AttributeType: S
+          - AttributeName: filepath
             AttributeType: S
         KeySchema:
           - AttributeName: id
