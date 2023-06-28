@@ -301,6 +301,12 @@ functions:
     package:
       patterns:
         - 'moveFile/**'
+  rollback:
+    handler: moveFile/move_file.Rollback
+    runtime: nodejs14.x
+    package:
+      patterns:
+        - 'moveFile/**'
   registerUser:
     handler: registerUser/register_user.handler
     runtime: nodejs14.x
@@ -469,7 +475,7 @@ stepFunctions:
                 Next: cleanupOnError
           cleanupOnError:
             Type: Task
-            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-cleanupOnError"
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-rollback"
             End: true
             InputPath: "$.error"
 

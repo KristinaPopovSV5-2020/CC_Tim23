@@ -11,6 +11,9 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 exports.handlerDynamoDB = async (event, context) =>  {
 
+    try{
+
+
     const formData = event;
     const username="markic";
     //const username=event.requestContext.authorizer.claims['cognito:username'];
@@ -51,6 +54,10 @@ exports.handlerDynamoDB = async (event, context) =>  {
    }catch(error){
        return { statusCode: 404, error: error.message}
    }
+    }
+    catch(error){
+        return {error:event.id}
+    }
 };
 
 exports.handlerCopy = async (event, context) => {
@@ -92,41 +99,9 @@ exports.handlerDelete = async (event, context) =>  {
 
 }
 
-exports.RollbackDelete = async (event, context) =>  {
+exports.Rollback = async (event, context) =>  {
 
-    const formData = event.body;
-    const currentObjectKey = event.filename;
-
-     const deleteObjectParams = {
-      Bucket: bucketName,
-      Key: currentObjectKey
-    };
-    const response2=await s3.deleteObject(deleteObjectParams).promise();
+    return event.error
 
 }
 
-exports.RollbackMove = async (event, context) =>  {
-
-    const formData = event.body;
-    const currentObjectKey = event.filename;
-
-     const deleteObjectParams = {
-      Bucket: bucketName,
-      Key: currentObjectKey
-    };
-    const response2=await s3.deleteObject(deleteObjectParams).promise();
-
-}
-
-exports.RollbackDynamoDB = async (event, context) =>  {
-
-    const formData = event.body;
-    const currentObjectKey = event.filename;
-
-     const deleteObjectParams = {
-      Bucket: bucketName,
-      Key: currentObjectKey
-    };
-    const response2=await s3.deleteObject(deleteObjectParams).promise();
-
-}
