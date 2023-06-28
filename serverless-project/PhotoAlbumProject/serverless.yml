@@ -71,6 +71,7 @@ provider:
             - ''
             - - Fn::GetAtt: [ ShareTable, Arn ]
               - '/index/sharedWith-index'
+              - '/index/filepath-index'
     - Effect: Allow
       Action:
         - s3:GetObject
@@ -442,15 +443,31 @@ stepFunctions:
             Type: Task
             Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-moveDynamoDB"
             Next: s3Copy
+            Catch:
+              - ErrorEquals: [ "States.ALL" ]
+                ResultPath: "$.error"
+                Next: cleanupOnError
           s3Copy:
             Type: Task
             Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-s3Copy"
             Next: s3Delete
+            Catch:
+              - ErrorEquals: [ "States.ALL" ]
+                ResultPath: "$.error"
+                Next: cleanupOnError
           s3Delete:
             Type: Task
             Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-s3Delete"
             End: true
-
+            Catch:
+              - ErrorEquals: [ "States.ALL" ]
+                ResultPath: "$.error"
+                Next: cleanupOnError
+          cleanupOnError:
+            Type: Task
+            Resource: "arn:aws:lambda:${aws:region}:815307418428:function:${self:service}-${self:provider.stage}-cleanupOnError"
+            End: true
+            InputPath: "$.error"
 
 resources:
   Resources:
@@ -535,6 +552,15 @@ resources:
             KeySchema:
               - AttributeName: sharedWith
                 KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+          - IndexName: filepath-index
+            KeySchema:
+                - AttributeName: filepath
+                  KeyType: HASH
             Projection:
               ProjectionType: ALL
             ProvisionedThroughput:

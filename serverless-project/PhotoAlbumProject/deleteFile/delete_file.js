@@ -2,14 +2,16 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
 const table_name = process.env.CONTENT_TABLE_NAME;
+const share_name = process.env.SHARE_TABLE_NAME;
 const bucket_name = process.env.RESOURCES_BUCKET_NAME;
 
 exports.handler = async (event, context) =>  {
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
-    const username="zorica";
+    const username="markic";
     //const username=event.requestContext.authorizer.claims['cognito:username'];
     const contentId=event.pathParameters.id;
+    const share_table = dynamodb.Table(share_name)
 
     const getParams = {
     TableName: table_name,
@@ -42,6 +44,20 @@ exports.handler = async (event, context) =>  {
     };
 
     const response = await dynamodb.delete(deleteParams).promise();
+
+     const response1 = share_table.query(
+        IndexName='filepath-index',
+        KeyConditionExpression='filepath = :filepath',
+        ExpressionAttributeValues={':filepath': Item.filepath}
+    )
+     for(let i of response1.Items){
+          const deleteParams = {
+          TableName: share_name,
+          Key:{ id: i.id }
+        };
+
+        const response = await dynamodb.delete(deleteParams).promise();
+     }
 
     const sqs = new AWS.SQS();
     const message = {
