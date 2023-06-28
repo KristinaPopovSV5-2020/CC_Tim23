@@ -43,6 +43,11 @@ provider:
       Resource: "*"
     - Effect: Allow
       Action:
+        - cognito-idp:AdminUpdateUserAttributes
+        - cognito-idp:AdminConfirmSignUp
+      Resource: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5
+    - Effect: Allow
+      Action:
         - cognito-idp:AdminGetUser
         - cognito-idp:AdminInitiateAuth
       Resource: arn:aws:cognito-idp:eu-north-1:815307418428:userpool/eu-north-1_eXQUKF6d5

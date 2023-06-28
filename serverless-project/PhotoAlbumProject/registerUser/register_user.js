@@ -1,5 +1,3 @@
-const fs = require('fs');
-const html = fs.readFileSync('index.html', { encoding:'utf8' });
 
 const AWS = require('aws-sdk');
 const cognito = new AWS.CognitoIdentityServiceProvider();
@@ -12,7 +10,7 @@ exports.handler = async (event, context) => {
     const username = formData.username;
 
     const userExists = await cognito.adminGetUser({
-    UserPoolId: process.env.USER_POOL_ID,
+    UserPoolId: "eu-north-1_eXQUKF6d5",
     Username: username
   }).promise().catch(() => false);
 
