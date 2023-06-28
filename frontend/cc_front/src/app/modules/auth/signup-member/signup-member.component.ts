@@ -110,8 +110,12 @@ export class SignupMemberComponent implements OnInit{
           alert("Success!")
         },
         error: (error) => {
-          if (error instanceof HttpErrorResponse) {
-              alert("");
+          if (error.status == 400){
+            alert('User already exists');
+
+          }else if (error.status == 403){
+            alert('Invited username does not exist');
+
           }
         },
       });

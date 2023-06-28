@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
   if (userExists) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'User already exists' }),
+      body: 'User already exists',
     };
   }
 
@@ -100,30 +100,89 @@ exports.handler = async (event, context) => {
           const response2 = await cognito
             .adminConfirmSignUp(poolData1)
             .promise();
-          return { statusCode: 200, body: JSON.stringify(formData) };
         } catch (e) {
-          return { statusCode: 404, error: e.message };
+          return { statusCode: 400, body: e.message };
         }
 
       }
     }
+    return {
+      statusCode: 403,
+      body: 'Invited username does not exist',
+    };
   } catch (err) {
     return {
       statusCode: 403,
-      body: JSON.stringify({ error: 'Invited username does not exist' }),
+      body: 'Invited username does not exist',
     };
   }
 
-  const link = 'http://localhost:4200/verify-member/${encodeURIComponent(username)}/${encodeURIComponent(invitedUsername)}';
 
-  const body = `
-    <html>
-      <body>
-        <h1>Click on the following link to verify the invited family member:</h1>
-        <p>Click <a href="${link}">here</a></p>
-      </body>
-    </html>
-  `;
 
+
+const link = `http://localhost:4200/verify-member/${encodeURIComponent(username)}/${encodeURIComponent(invitedUsername)}`;
+const emailTo = await getUserEmail(invitedUsername);
+const body = `
+  <html>
+    <body>
+      <h1>Click on the following link to verify the invited family member:</h1>
+      <p>Click <a href="${link}">here</a></p>
+    </body>
+  </html>
+`;
+
+const paramsEmail = {
+  Destination: {
+    ToAddresses: [emailTo]
+  },
+  Message: {
+    Body: {
+      Html: {
+        Data: body
+      }
+    },
+    Subject: {
+      Data: 'Verify the invited family member'
+    }
+  },
+  Source: 'kikapopov123@gmail.com'
+};
+
+try {
+  await sesClient.sendEmail(paramsEmail).promise();
+  console.log('Email sent successfully');
+  return {
+    statusCode: 200,
+    body:'Email sent!'
+  };
+} catch (error) {
+  return {
+    statusCode: 400,
+    body: JSON.stringify({ error: error.message })
+  };
+}
 
 };
+
+
+
+
+async function getUserEmail(username) {
+  const params = {
+    UserPoolId: 'eu-north-1_eXQUKF6d5',
+    Username: username
+  };
+
+  try {
+    const response = await cognito.adminGetUser(params).promise();
+    const emailAttribute = response.UserAttributes.find(attr => attr.Name === 'email');
+    if (emailAttribute) {
+      return emailAttribute.Value;
+    }
+  } catch (error) {
+      return {
+    statusCode: 400,
+    body: JSON.stringify({ error: error.message })
+  };
+  }
+}
