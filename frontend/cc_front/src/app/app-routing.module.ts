@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: 'shared-gallery', component: SharedGalleryComponent},
   {path:'family-member', component: FamilyMemberComponent},
   {path: 'signup-member', component:SignupMemberComponent},
-  {path: 'verify-member', component: VerifyMemberComponent}
+  { path: 'verify-member/:username/:invitedUsername', component: VerifyMemberComponent },
 ];
 
 @NgModule({

@@ -30,8 +30,8 @@ export class VerifyMemberComponent implements OnInit{
         alert("Success!")
       },
       error: (error) => {
-        if (error instanceof HttpErrorResponse) {
-            alert("");
+        if (error.status == 404) {
+            alert("User does not exist!");
         }
       },
     });

@@ -26,7 +26,7 @@ def share(event, context):
     except Exception as e:
         return {
             'statusCode': 404,
-            'body': str(response)
+            'body': "User does not exist!"
         }
 
     query_params = {
