@@ -67,6 +67,10 @@ provider:
             - ''
             - - Fn::GetAtt: [ MemberTable, Arn ]
               - '/index/username-index'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ ShareTable, Arn ]
+              - '/index/sharedWith-index'
     - Effect: Allow
       Action:
         - s3:GetObject

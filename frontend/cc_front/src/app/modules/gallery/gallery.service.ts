@@ -68,7 +68,7 @@ export class GalleryService {
   }
 
   getSharedGallery():Observable<any>{
-    return this.http.get(this.url+"/shared_gallery");
+    return this.http.get(this.url+"/shared_content");
   }
 
 
