@@ -38,14 +38,24 @@ export class SharedGalleryComponent implements OnInit {
     }
 
 
-    splitFilename(filename: string): string {
-      const parts = filename.split('/');
-      return parts[parts.length - 1];
+    splitFilename(content: any): string {
+      if (content.filepath){
+        const parts = content.filepath.split('/');
+        return parts[parts.length - 1];
+
+      }else{
+        const parts = content.filename.split('/');
+        return parts[parts.length - 1];
+      }
+     
     }
 
     splitRoot(filename: string): string {
       const parts = filename.split('/');
-      return parts[0];
+      if (parts[parts.length - 1] == ""){
+        return parts[0];
+      }
+      return parts[parts.length - 1];
     }
     
     ngOnInit(): void {
@@ -60,7 +70,7 @@ export class SharedGalleryComponent implements OnInit {
     }
 
     onSubfolderClick(subfolder: any): void{
-      this.path = this.path.substring(0, this.path.length -1) + subfolder + "/";
+      this.path = this.path.substring(0, this.path.length -1) + "/" + subfolder + "/";
       const sub = this.path.replaceAll("/", ",");
       this.contents=[];
       this.subfolders=[];
@@ -73,8 +83,16 @@ export class SharedGalleryComponent implements OnInit {
     }
   
     onFolderClick(folder: any): void{
-      const sub = folder.filepath.replaceAll("/", ",");
-      this.path=folder.filepath+"/"
+      if (folder.filepath[folder.filepath.length-1] == "/"){
+        this.path=folder.filepath;
+
+      }else{
+        this.path=folder.filepath+"/";
+        
+      }
+    
+      const sub = this.path.replaceAll("/", ","); 
+      console.log( "Folder" + sub);
       this.contents=[];
       this.subfolders=[];
       this.galleryService.loadAlbum(sub).subscribe({
@@ -95,6 +113,7 @@ export class SharedGalleryComponent implements OnInit {
 
     splitAlbumName(album: string): string {
       const parts = album.split('/');
+      console.log(parts);
       return parts[parts.length - 1];
     }
 

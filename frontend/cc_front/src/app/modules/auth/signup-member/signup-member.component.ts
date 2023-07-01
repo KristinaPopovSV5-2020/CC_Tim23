@@ -116,6 +116,8 @@ export class SignupMemberComponent implements OnInit{
           }else if (error.status == 403){
             alert('Invited username does not exist');
 
+          }else{
+            alert("succes!");
           }
         },
       });

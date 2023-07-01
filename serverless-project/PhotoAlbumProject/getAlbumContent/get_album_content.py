@@ -28,7 +28,7 @@ def get(event, context):
 
     response = dynamodb.query(**query_params)
     items = response.get('Items', [])
-    sorted_items = sorted(items, key=lambda x: datetime.strptime(x['dateModified']['S'], '%d/%m/%Y'), reverse=False)
+    sorted_items = sorted(items, key=lambda x: datetime.strptime(x['dateModified']['S'], '%d/%m/%Y'), reverse=True)
     subfolders = set()
     results = []
 

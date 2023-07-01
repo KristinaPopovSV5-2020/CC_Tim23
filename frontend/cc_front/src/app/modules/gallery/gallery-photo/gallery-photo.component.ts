@@ -81,7 +81,7 @@ export class GalleryPhotoComponent implements OnInit {
 
   addContent(){
     const dialogRef = this.dialog.open(UploadFileComponent, {
-      data: { value: '' }
+      data: { value: this.path }
     });
 
     dialogRef.afterClosed().subscribe(result => {

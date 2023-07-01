@@ -18,6 +18,7 @@ export class UploadFileComponent  implements OnInit{
   tags: string[] = [];
   formData: FormData | undefined;
   selectedFile: File | null = null;
+  path : string = '';
 
 
   constructor(private formBuilder: FormBuilder,
@@ -26,6 +27,7 @@ export class UploadFileComponent  implements OnInit{
     private dialog: MatDialog,
     private auth: AuthService,
     @Inject(MAT_DIALOG_DATA) public dialogData: { value: string }){
+      this.path = dialogData.value
     }
     
   ngOnInit(): void {
@@ -123,7 +125,7 @@ export class UploadFileComponent  implements OnInit{
 
   parseFilename(): string | Blob {
     const fileParts = this.selectedFile?.name.split('.');
-    return this.auth.getUsername() + "/" + this.UploadForm.value.filename + "." + fileParts![fileParts!.length - 1];
+    return this.path + this.UploadForm.value.filename + "." + fileParts![fileParts!.length - 1];
   }
 
   hasSpecialCharacter(control: FormControl) {

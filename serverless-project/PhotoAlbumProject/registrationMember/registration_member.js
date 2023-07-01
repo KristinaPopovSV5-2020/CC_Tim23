@@ -14,7 +14,7 @@ exports.handler = async (event, context) => {
 
   const userExists = await cognito
     .adminGetUser({
-      UserPoolId: process.env.USER_POOL_ID,
+      UserPoolId: 'eu-north-1_eXQUKF6d5',
       Username: username,
     })
     .promise()
@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
   if (userExists) {
     return {
       statusCode: 400,
-      body: 'User already exists',
+      body: 'User already exist',
     };
   }
 
@@ -36,13 +36,17 @@ exports.handler = async (event, context) => {
     },
   };
 
+let exist = false;
+let added = false;
   try {
     const data = await dynamodb.query(params).promise();
     const emails = data.Items.map(item => item.email);
+
     for (let e of emails) {
 
-      if (e == email) {
-
+      if (e === email) {
+      exist = true;
+        if (!added){
         const poolData = {
           UserPoolId: 'eu-north-1_eXQUKF6d5',
           ClientId: '4nelltj3ilhar854vk16rjiim9',
@@ -100,20 +104,24 @@ exports.handler = async (event, context) => {
           const response2 = await cognito
             .adminConfirmSignUp(poolData1)
             .promise();
+          added = true;
         } catch (e) {
           return { statusCode: 400, body: e.message };
         }
+        }
+
 
       }
     }
+    if (!exist){
     return {
       statusCode: 403,
       body: 'Invited username does not exist',
-    };
+    };}
   } catch (err) {
     return {
       statusCode: 403,
-      body: 'Invited username does not exist',
+      body: err.message
     };
   }
 

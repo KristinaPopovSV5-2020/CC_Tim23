@@ -11,7 +11,7 @@ exports.handler = async (event, context) =>  {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const formData = event;
     //const username=event.requestContext.authorizer.claims.username;
-    const username="zorica";
+    const username="markic";
     const contentId=event.id;
 
     const getParams = {
@@ -60,8 +60,11 @@ exports.handlerDynamoDB = async (event, context) => {
 
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
-    const formData = event;
-    const contentId=event.id;
+    const formData = event.body;
+    //const username=event.requestContext.authorizer.claims.username;
+    const username="markic";
+
+    const contentId=formData.id;
     const currentDate=new Date();
     const formattedDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'short' }).format(currentDate);
 
